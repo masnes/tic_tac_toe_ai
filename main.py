@@ -75,5 +75,51 @@ def debug_check_board():
     return
 
 
+class Node:
+    '''A node in our list-tree'''
+    def __init__(self, parent, board_array, computer_value):
+        self.child_wins = 0
+        self.winner = check_board(board_array)
+        self.parent = parent
+
+        if self.parent is not None:
+            if self.winner == computer_value:
+                self.parent.child_wins += 1
+
+        self.children = []
+        self.board_array = board_array
+
+    def add_child(self, child):
+        self.children.append(child)
+
+    def find_child(self, board_array):
+        for child in self.children:
+            if child.board_array == board_array:
+                return child
+        return None
+
+
+def debug_node():
+    board_array = [[0 for x in range(3)] for x in range(3)]
+    parent = Node(None, board_array, 1)
+    children_arrays = []
+    for i in range(3):
+        for j in range(3):
+            new_board = [[0 for x in range(3)] for x in range(3)]
+            new_board[i][j] = 1
+            children_arrays.append(new_board)
+    for child_array in children_arrays:
+        child_node = Node(parent, child_array, 1)
+        parent.add_child(child_node)
+
+    print(parent.children)
+    for child in parent.children:
+        print(child.board_array)
+        print(child.winner)
+    print(parent.board_array)
+    print(parent.winner)
+
+
 if __name__ == '__main__':
     debug_check_board()
+    debug_node()

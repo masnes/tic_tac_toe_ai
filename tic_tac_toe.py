@@ -5,10 +5,11 @@ def check_board_horizontally(board_array):
     ret = 0
     # check horizontal rows
     for horizontal_row in board_array:
-        items = set(horizontal_row)
-        if len(items) == 1:
-            ret = items.pop()
-            break
+        if horizontal_row[0] is not 0:
+            items = set(horizontal_row)
+            if len(items) == 1:
+                ret = items.pop()
+                break
     return ret
 
 
@@ -21,10 +22,11 @@ def check_board_vertically(board_array):
     # note that vertical_row is a tuple, while in check_board_horizontally
     # it's a list. This doesn't affect the (current) implemenation
     for vertical_row in zip(*board_array):
-        items = set(vertical_row)
-        if len(items) == 1:
-            ret = items.pop()
-            break
+        if vertical_row[0] is not 0:
+            items = set(vertical_row)
+            if len(items) == 1:
+                ret = items.pop()
+                break
     return ret
 
 
@@ -39,6 +41,7 @@ def check_board_diagonally(board_array):
         up_right_diagonal = {board_array[i][l-i-1] for i in range(0, l)}
         if len(down_right_diagonal) == 1:
             ret = down_right_diagonal.pop()
+        # this part breaks if the "if board_array[1][1]" part is removed
         elif len(up_right_diagonal) == 1:
             ret = up_right_diagonal.pop()
     return ret
@@ -52,11 +55,11 @@ def check_board(board_array):
     Returns: 0 if no three_in_a_row found,  otherwise the number of the player
              with the (first) three_in_a_row found'''
     ret = 0
-    if not ret:
+    if ret == 0:
         ret = check_board_horizontally(board_array)
-    if not ret:
+    if ret == 0:
         ret = check_board_diagonally(board_array)
-    if not ret:
+    if ret == 0:
         ret = check_board_vertically(board_array)
     return ret
 

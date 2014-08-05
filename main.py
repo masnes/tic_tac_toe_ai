@@ -61,25 +61,6 @@ def check_board(board_array):
     return ret
 
 
-def debug_check_board():
-    boardvalhorizontal = 0
-    boardvalvertical = 0
-    boardvaldiagonal = 0
-    boardvalnone = 0
-    boardhorizontal = [[1, 1, 1], [2, 1, 2], [1, 2, 1]]
-    boardvertical = [[0, 2, 0], [1, 2, 2], [1, 2, 1]]
-    boarddiagonal = [[1, 2, 1], [2, 1, 2], [1, 2, 1]]
-    boardnone = [[0, 0, 0], [2, 1, 2], [1, 2, 1]]
-    boardvalhorizontal = check_board(boardhorizontal)
-    boardvalvertical = check_board(boardvertical)
-    boardvaldiagonal = check_board(boarddiagonal)
-    boardvalnone = check_board(boardnone)
-    print("boardvalnone: {0}, boardvalhorizontal: {1}, boardvalvertical: {2}, \
-          boardvaldiagonal: {3}".format(boardvalnone, boardvalhorizontal,
-                                        boardvalvertical, boardvaldiagonal))
-    return
-
-
 class Node:
     '''A node in our list-tree. The node stores information on what it's parent
     is, what it's children are, whether it's a winner, and how many winning
@@ -114,28 +95,7 @@ class Node:
         return None
 
 
-def debug_node():
-    board_array = [[0 for x in range(3)] for x in range(3)]
-    print(board_array)
-    parent = Node(None, board_array, 1)
-    children_arrays = []
-    for i in range(3):
-        for j in range(3):
-            new_board = [[0 for x in range(3)] for x in range(3)]
-            new_board[i][j] = 1
-            children_arrays.append(new_board)
-    for child_array in children_arrays:
-        child_node = Node(parent, child_array, 1)
-        parent.add_child(child_node)
-
-    print(parent.children)
-    for child in parent.children:
-        print(child.board_array)
-        print(child.winner)
-    print(parent.board_array)
-    print(parent.winner)
-
-
 if __name__ == '__main__':
-    debug_check_board()
-    debug_node()
+    # some throwaway code to keep pylint happy
+    check_board([[1, 1, 1], [2, 2, 2], [0, 1, 0]])
+    Node(None,  [[1, 1, 1], [2, 2, 2], [0, 1, 0]])

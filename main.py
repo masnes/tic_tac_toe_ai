@@ -1,6 +1,6 @@
 def check_board_horizontally(board_array):
-    '''check the horizontal rows of a 3x3 gameboard,  returning 0 if no 3 in a
-    row is found,  and the player number who has the first three in a row
+    '''check the horizontal rows of a nxn gameboard, returning 0 if no
+    n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise'''
     ret = 0
     # check horizontal rows
@@ -13,28 +13,34 @@ def check_board_horizontally(board_array):
 
 
 def check_board_vertically(board_array):
-    '''check the vertical rows of a 3x3 gameboard,  returning 0 if no 3 in a
-    row is found,  and the player number who has the first three in a row
+    '''check the vertical rows of a nxn gameboard, returning 0 if no
+    n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise'''
     # check vertical rows
     ret = 0
-    for x, y, z in zip(*board_array):
-        if x and x == y == z:
-            ret = x
+    # note that vertical_row is a tuple, while in check_board_horizontally
+    # it's a list. This doesn't affect the (current) implemenation
+    for vertical_row in zip(*board_array):
+        items = set(vertical_row)
+        if len(items) == 1:
+            ret = items.pop()
             break
     return ret
 
 
 def check_board_diagonally(board_array):
-    '''check the diagonal cross section of a 3x3 gameboard,  returning 0 if no 3
-    in a row is found,  and the player number who has the first three in a row
+    '''check the diagonal cross section of a nxn gameboard,  returning 0 if no
+    n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise'''
     ret = 0
-    if board_array[1][1]:
-        if board_array[0][0] == board_array[1][1] == board_array[2][2]:
-            ret = board_array[1][1]
-        if board_array[0][2] == board_array[1][1] == board_array[2][0]:
-            ret = board_array[1][1]
+    if board_array[1][1]:  # if there's no center, there's no diagonals
+        l = len(board_array[0])
+        down_right_diagonal = {board_array[i][i] for i in range(0, l)}
+        up_right_diagonal = {board_array[i][l-i-1] for i in range(0, l)}
+        if len(down_right_diagonal) == 1:
+            ret = down_right_diagonal.pop()
+        elif len(up_right_diagonal) == 1:
+            ret = up_right_diagonal.pop()
     return ret
 
 

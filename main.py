@@ -75,8 +75,18 @@ def debug_check_board():
 
 
 class Node:
-    '''A node in our list-tree'''
-    def __init__(self, parent, board_array, computer_value):
+    '''A node in our list-tree. The node stores information on what it's parent
+    is, what it's children are, whether it's a winner, and how many winning
+    children it has'''
+    def __init__(self, parent, board_array, computer_value=1):
+        '''initialize a node in the list tree
+
+        parameters
+        parent -- parent node, if any
+        board_array -- a 3x3 2d list with the tic-tac-toe state for this node
+        computer_value -- the value that represents the computer on
+        board_array, defaults to 1
+        '''
         self.child_wins = 0
         self.winner = check_board(board_array)
         self.parent = parent

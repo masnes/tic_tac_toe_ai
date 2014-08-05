@@ -4,11 +4,11 @@ def check_board_horizontally(board_array):
     otherwise'''
     ret = 0
     # check horizontal rows
-    for i in range(3):
-        if board_array[i][0] is not 0:
-            if board_array[i][0] == board_array[i][1] == board_array[i][2]:
-                ret = board_array[i][0]
-                break
+    for horizontal_row in board_array:
+        items = set(horizontal_row)
+        if len(items) == 1:
+            ret = items.pop()
+            break
     return ret
 
 
@@ -16,13 +16,12 @@ def check_board_vertically(board_array):
     '''check the vertical rows of a 3x3 gameboard,  returning 0 if no 3 in a
     row is found,  and the player number who has the first three in a row
     otherwise'''
-    ret = 0
     # check vertical rows
-    for i in range(3):
-        if board_array[0][i] is not 0:
-            if board_array[0][i] == board_array[1][i] == board_array[2][i]:
-                ret = board_array[0][i]
-                break
+    ret = 0
+    for x, y, z in zip(*board_array):
+        if x and x == y == z:
+            ret = x
+            break
     return ret
 
 
@@ -31,7 +30,7 @@ def check_board_diagonally(board_array):
     in a row is found,  and the player number who has the first three in a row
     otherwise'''
     ret = 0
-    if board_array[1][1] is not 0:
+    if board_array[1][1]:
         if board_array[0][0] == board_array[1][1] == board_array[2][2]:
             ret = board_array[1][1]
         if board_array[0][2] == board_array[1][1] == board_array[2][0]:
@@ -47,11 +46,11 @@ def check_board(board_array):
     Returns: 0 if no three_in_a_row found,  otherwise the number of the player
              with the (first) three_in_a_row found'''
     ret = 0
-    if ret == 0:
+    if not ret:
         ret = check_board_horizontally(board_array)
-    if ret == 0:
+    if not ret:
         ret = check_board_diagonally(board_array)
-    if ret == 0:
+    if not ret:
         ret = check_board_vertically(board_array)
     return ret
 
@@ -101,6 +100,7 @@ class Node:
 
 def debug_node():
     board_array = [[0 for x in range(3)] for x in range(3)]
+    print(board_array)
     parent = Node(None, board_array, 1)
     children_arrays = []
     for i in range(3):

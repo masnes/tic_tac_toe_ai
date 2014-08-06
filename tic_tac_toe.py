@@ -75,6 +75,21 @@ def count_zeros(board_array):
     return zero_count
 
 
+def whos_turn_generator(player_one_starts=True):
+    '''Alternates turns between player 1 and player 2
+
+    -- player_one_starts: Bool, option to initiate the generator
+    with either player one, or player 2 starting'''
+    if not player_one_starts:
+        current_player = 2
+        yield current_player
+    while True:
+        current_player = 1
+        yield current_player
+        current_player = 2
+        yield current_player
+
+
 class Node:
     '''A node in our list-tree. The node stores information on what it's parent
     is, what it's children are, whether it's a winner, and how many winning

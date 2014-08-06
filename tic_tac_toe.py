@@ -90,6 +90,20 @@ def whos_turn_generator(player_one_starts=True):
         yield current_player
 
 
+def gen_play_permutations(board_array, players_turn):
+    '''Gens each possible move left in the board for a given player
+
+    -- board_array: an nxn array holding the current state of play
+    -- players_turn: indicates which players turn it is to play'''
+    for i, row in board_array:
+        for j, square in row:
+            if square == 0:
+                board_array[i][j] = players_turn
+                yield board_array
+                board_array[i][j] = 0
+    yield StopIteration
+
+
 class Node:
     '''A node in our list-tree. The node stores information on what it's parent
     is, what it's children are, whether it's a winner, and how many winning

@@ -64,6 +64,17 @@ def check_board(board_array):
     return ret
 
 
+def count_zeros(board_array):
+    '''Counts number of zeros in an nxn array
+
+    -- board_array: an nxn array'''
+    zero_count = 0
+    for row in board_array:
+        for item in row:
+            zero_count += (item == 0)
+    return zero_count
+
+
 class Node:
     '''A node in our list-tree. The node stores information on what it's parent
     is, what it's children are, whether it's a winner, and how many winning

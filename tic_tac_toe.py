@@ -2,8 +2,8 @@ def check_board_horizontally(board_array):
     '''check the horizontal rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise'''
-    ret = 0
     # check horizontal rows
+    ret = 0
     for horizontal_row in board_array:
         if horizontal_row[0] is not 0:
             items = set(horizontal_row)
@@ -91,7 +91,7 @@ class Node:
     def add_child(self, child):
         self.children.append(child)
 
-    def find_child(self, board_array):
+    def has_child(self, board_array):
         for child in self.children:
             if child.board_array == board_array:
                 return child

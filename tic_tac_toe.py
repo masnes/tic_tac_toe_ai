@@ -138,6 +138,22 @@ class Node:
         return None
 
 
+def add_node_to_tree(board_array, parent_node):
+    '''Adds a node to the current tree. If the parent_node is not there, adds a
+    parent node. Otherwise adds the node as a child of the parent node
+
+    -- board_array: the nxn board state for the node to be added
+    -- parent_node: the nodes parent, if any'''
+    if parent_node is None:
+        parent_node = Node(None, board_array)
+        new_child = parent_node
+    else:
+        child_node = Node(parent_node, board_array)
+        parent_node.add_child(child_node)
+        new_child = child_node
+    return new_child
+
+
 if __name__ == '__main__':
     # some throwaway code to keep pylint happy
     check_board([[1, 1, 1], [2, 2, 2], [0, 1, 0]])

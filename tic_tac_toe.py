@@ -121,15 +121,12 @@ class Node:
         self.winner = check_board(board_array)
         self.parent = parent
 
-        if self.parent is not None:
-            if self.winner == computer_value:
-                self.parent.child_wins += 1
-
         self.children = []
         self.board_array = board_array
 
     def add_child(self, child):
         self.children.append(child)
+        child.parent = self
 
     def has_child(self, board_array):
         for child in self.children:

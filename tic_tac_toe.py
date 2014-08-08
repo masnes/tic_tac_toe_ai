@@ -235,7 +235,8 @@ def build_new_board_array(dimensions):
     return board_array
 
 
-def build_decision_tree(depth, computer_goes_first=True, board_dimensions=3):
+def build_decision_tree(computer_goes_first=True, board_dimensions=3,
+                        max_depth=None):
     '''Builds a decision tree for a board of given dimensions
     up to a maximum depth, or until all possibilities are exhausted
 

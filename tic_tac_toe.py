@@ -95,6 +95,13 @@ def count_zeros(board_array):
     return zero_count
 
 
+def swap_players(player):
+    if player == 2:
+        return 1
+    else:
+        return 2
+
+
 class WhosTurnGenerator():
     '''Alternates turns between player 1 and player 2
 

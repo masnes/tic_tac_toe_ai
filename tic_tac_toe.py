@@ -190,9 +190,34 @@ def add_node_to_tree(board_array, parent_node):
     return new_child
 
 
-def add_nodes_recursively(parent_node):
-    pass
-    # TODO
+def add_nodes_recursively(parent_node, next_player, max_depth):
+    # recursive base cases
+    if parent_node.winner:
+        print("current:current, {0} {1}".format(parent_node.winner,
+                                                parent_node.board_array))
+        return
+    if max_depth == 0:
+        print("max_depth")
+        return
+
+    player_turn = next_player
+    for board_variation in gen_play_permutations(parent_node.board_array,
+                                                 player_turn):
+        child = Node(parent_node, board_variation)
+        child = Node(parent_node, board_variation)
+        parent_node.add_child(child)
+
+    # change state before adding children's children
+    next_player = swap_players(next_player)
+    if max_depth is not None:
+        new_depth = max_depth - 1
+    else:
+        new_depth = None
+
+    # add children's children
+    for child in parent_node.children:
+        print("child!")
+        add_nodes_recursively(child, next_player, new_depth)
 
 
 def build_new_board_array(dimensions):

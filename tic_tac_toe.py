@@ -1,6 +1,3 @@
-import copy
-
-
 def check_board_horizontally(board_array):
     '''check the horizontal rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
@@ -95,55 +92,33 @@ def count_zeros(board_array):
     return zero_count
 
 
-class WhosTurnGenerator:
-    '''Iterator that alternates turns between player 1 and player 2
+def whos_turn_generator(player_one_starts=True):
+    '''Alternates turns between player 1 and player 2
 
-    -- does_player_one_start: Bool, option to initiate the generator
-    with player one, or alternately player two, starting'''
-
-    def __init__(self, does_player_one_start=True):
-        if does_player_one_start:
-            self.starting_player = 1
-        else:
-            self.starting_player = 2
-
-    def __iter__(self):
-        self.player = self.starting_player
-        return self
-
-    def __next__(self):
-        self.player = 1 + (self.player == 1)
-        return self.player
-        # There's no StopIteration by design
+    -- player_one_starts: Bool, option to initiate the generator
+    with either player one, or player 2 starting'''
+    if not player_one_starts:
+        current_player = 2
+        yield current_player
+    while True:
+        current_player = 1
+        yield current_player
+        current_player = 2
+        yield current_player
 
 
-def gen_play_permutations(board_array, does_player_one_start=True):
+def gen_play_permutations(board_array, players_turn):
     '''Gens each possible move left in the board for a given player
-    Note: there's no 3-in-a-row checking here. That must be done elsewhere
 
     -- board_array: an nxn array holding the current state of play
     -- players_turn: indicates which players turn it is to play'''
-    # initialize generator to flip player turns
-    turn_gen = WhosTurnGenerator(does_player_one_start)
-    turn_gen.__iter__()
-    # deepcopy, so we don't change what we're iterating over
-    board_to_ret = copy.deepcopy(board_array)
-    # get starting players turn
-    players_turn = turn_gen.player
-    for i, row in enumerate(board_array):
-        for j, square in enumerate(row):
+    for i, row in board_array:
+        for j, square in row:
             if square == 0:
-                # player a goes
-                board_to_ret[i][j] = players_turn
-                yield board_to_ret
-                # player b goes
-                players_turn = turn_gen.__next__()
-                board_to_ret[i][j] = players_turn
-                yield board_to_ret
-                # reset state for the next square/row
-                players_turn = turn_gen.__next__()
-                board_to_ret[i][j] = 0
-    raise StopIteration
+                board_array[i][j] = players_turn
+                yield board_array
+                board_array[i][j] = 0
+    yield StopIteration
 
 
 class Node:

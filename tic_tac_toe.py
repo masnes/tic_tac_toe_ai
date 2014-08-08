@@ -219,14 +219,15 @@ def build_decision_tree(depth, computer_goes_first=True, board_dimensions=3):
 
     root = Node(None, board_array, computer_player)
     for n in gen_play_permutations(board_array):
-        new_node = Node(root,
+        # new_node = Node(root,
+        pass
 
 
 if __name__ == '__main__':
     # some throwaway code to keep pylint happy
     check_board([[1, 1, 1], [2, 2, 2], [0, 1, 0]])
     Node(None,  [[1, 1, 1], [2, 2, 2], [0, 1, 0]])
-    for board in gen_play_permutations([[1, 1, 1], [2, 2, 2], [0, 1, 0]]):
+    for board in gen_play_permutations([[1, 1, 1], [2, 2, 2], [0, 1, 0]], 1):
         print(board)
     else:  # really should be "then:"
         print("done with gen_play_permutations")

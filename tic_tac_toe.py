@@ -207,6 +207,29 @@ def build_new_board_array(dimensions):
     return board_array
 
 
+def build_decision_tree(depth, computer_goes_first=True, board_dimensions=3):
+    '''Builds a decision tree for a board of given dimensions
+    up to a maximum depth, or until all possibilities are exhausted
+
+    -- board_dimensions: how big a board to calculate for, base is 3, the
+    generic tic tac toe size
+
+    -- depth: How deep a decision tree to build. Pass 0 or None for a full
+    tree.
+
+    Returns: root node of tree'''
+    board_array = build_new_board_array(board_dimensions)
+
+    if computer_goes_first:
+        computer_player = 1
+    else:
+        computer_player = 2
+
+    root = Node(None, board_array, computer_player)
+    for n in gen_play_permutations(board_array):
+        new_node = Node(root,
+
+
 if __name__ == '__main__':
     # some throwaway code to keep pylint happy
     check_board([[1, 1, 1], [2, 2, 2], [0, 1, 0]])

@@ -37,12 +37,17 @@ def check_board_vertically(board_array):
     return ret
 
 
-def check_board_diagonally(board_array):
+def check_board_diagonally(board_array, n_in_a_row=3):
     '''check the diagonal cross section of a nxn gameboard,  returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_array: an nxn array carrying the current board state'''
+    -- board_array: an nxn array carrying the current board state
+    -- n_in_a_row: how many items in a row constitutes a win'''
+    num_subarrays = len(board_array)
+    num_items_in_subarray = len(board_array[0])
+    assert num_subarrays == num_items_in_subarray, "Array is not nxn"
+
     ret = 0
     if board_array[1][1]:  # if there's no center, there's no diagonals
         l = len(board_array[0])

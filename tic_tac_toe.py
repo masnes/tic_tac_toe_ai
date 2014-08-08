@@ -243,4 +243,8 @@ if __name__ == '__main__':
     for board in gen_play_permutations([[1, 1, 1], [2, 2, 2], [0, 1, 0]]):
         print(board)
     else:  # really should be "then:"
-        print("done")
+        print("done with gen_play_permutations")
+
+    for i in range(5):
+        new_board = build_new_board_array(i)
+        print(new_board)

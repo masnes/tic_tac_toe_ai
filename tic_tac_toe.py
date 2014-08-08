@@ -4,7 +4,9 @@ import copy
 def check_board_horizontally(board_array):
     '''check the horizontal rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
-    otherwise'''
+    otherwise
+
+    -- board_array: an nxn array carrying the current board state'''
     # check horizontal rows
     ret = 0
     for horizontal_row in board_array:
@@ -19,7 +21,9 @@ def check_board_horizontally(board_array):
 def check_board_vertically(board_array):
     '''check the vertical rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
-    otherwise'''
+    otherwise
+
+    -- board_array: an nxn array carrying the current board state'''
     # check vertical rows
     ret = 0
     # note that vertical_row is a tuple, while in check_board_horizontally
@@ -36,7 +40,9 @@ def check_board_vertically(board_array):
 def check_board_diagonally(board_array):
     '''check the diagonal cross section of a nxn gameboard,  returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
-    otherwise'''
+    otherwise
+
+    -- board_array: an nxn array carrying the current board state'''
     ret = 0
     if board_array[1][1]:  # if there's no center, there's no diagonals
         l = len(board_array[0])
@@ -52,9 +58,11 @@ def check_board_diagonally(board_array):
 
 def check_board(board_array):
     '''Check a 3x3 tictactoe board for 3 in a row
-    Arguments: board_array - a 3x3 array representing a tic tac to board,  it
-               is assumed that 0 spaces are unocupied,  and numbered spaces are
-               occupied by a player represented by that number
+
+    -- board_array:  a 3x3 array representing a tic tac to board,  it
+                     is assumed that 0 spaces are unocupied,  and numbered
+                     spaces are occupied by a player represented by that number
+
     Returns: 0 if no three_in_a_row found,  otherwise the number of the player
              with the (first) three_in_a_row found'''
     ret = 0

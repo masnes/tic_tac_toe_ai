@@ -193,6 +193,12 @@ def add_node_to_tree(board_array, parent_node):
     return new_child
 
 
+def add_nodes_recursively(parent_node):
+    pass
+    # TODO
+
+
+
 def build_new_board_array(dimensions):
     '''Builds a board_array (list of lists of ints) of dimensions nxn,
     initialize to all 0's

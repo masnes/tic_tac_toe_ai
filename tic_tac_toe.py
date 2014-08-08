@@ -1,4 +1,5 @@
 import copy
+import queue
 
 
 def check_board_horizontally(board_array):
@@ -270,3 +271,14 @@ if __name__ == '__main__':
     for i in range(5):
         new_board = build_new_board_array(i)
         print(new_board)
+def print_tree_structure(root):
+    fifo = queue.Queue()
+    fifo.put(root)
+    next_item = fifo.get()
+    while next_item:
+        num_children = len(next_item.children)
+        print(next_item.children)
+        print(num_children)
+        for child in next_item.children:
+            fifo.put(child)
+        next_item = fifo.get()

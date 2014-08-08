@@ -193,6 +193,20 @@ def add_node_to_tree(board_array, parent_node):
     return new_child
 
 
+def build_new_board_array(dimensions):
+    '''Builds a board_array (list of lists of ints) of dimensions nxn,
+    initialize to all 0's
+
+    -- dimensions: the size of n for our nxn board_array'''
+    sub_array = []
+    board_array = []
+    for i in range(dimensions):
+        sub_array.append(0)
+    for j in range(dimensions):
+        board_array.append(sub_array)
+    return board_array
+
+
 if __name__ == '__main__':
     # some throwaway code to keep pylint happy
     check_board([[1, 1, 1], [2, 2, 2], [0, 1, 0]])

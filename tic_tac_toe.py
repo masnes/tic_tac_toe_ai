@@ -37,6 +37,7 @@ def check_board_vertically(board_array):
     return ret
 
 
+# TODO: check boards in true n_in_a_row style
 def check_board_diagonally(board_array, n_in_a_row=3):
     '''check the diagonal cross section of a nxn gameboard,  returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
@@ -61,12 +62,14 @@ def check_board_diagonally(board_array, n_in_a_row=3):
     return ret
 
 
-def check_board(board_array):
+def check_board(board_array, n_in_a_row=3):
     '''Check a 3x3 tictactoe board for 3 in a row
 
-    -- board_array:  a 3x3 array representing a tic tac to board,  it
+    -- board_array:  a nxn array representing a tic tac to board,  it
                      is assumed that 0 spaces are unocupied,  and numbered
                      spaces are occupied by a player represented by that number
+
+    -- n_in_a_row: how many items in a row constitutes a win
 
     Returns: 0 if no three_in_a_row found,  otherwise the number of the player
              with the (first) three_in_a_row found'''
@@ -80,6 +83,7 @@ def check_board(board_array):
     return ret
 
 
+# Note: this function not currently in use
 def count_zeros(board_array):
     '''Counts number of zeros in an nxn array
 

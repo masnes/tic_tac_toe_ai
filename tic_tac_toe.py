@@ -95,19 +95,27 @@ def count_zeros(board_array):
     return zero_count
 
 
-def whos_turn_generator(player_one_starts=True):
+class WhosTurnGenerator():
     '''Alternates turns between player 1 and player 2
 
     -- player_one_starts: Bool, option to initiate the generator
     with either player one, or player 2 starting'''
-    if not player_one_starts:
-        current_player = 2
-        yield current_player
-    while True:
-        current_player = 1
-        yield current_player
-        current_player = 2
-        yield current_player
+    def __init__(self, player_one_starts=True):
+        if player_one_starts:
+            self.starting_player = 1
+        else:
+            self.starting_player = 2
+
+    def __iter__(self):
+        self.current_player = self.starting_player
+        return self.current_player
+
+    def __next__(self):
+        if self.current_player == 1:
+            self.current_player = 2
+        else:
+            self.current_player = 1
+        return self.current_player
 
 
 def gen_play_permutations(board_array, players_turn):

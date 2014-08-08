@@ -139,9 +139,9 @@ def gen_play_permutations(board_array, players_turn):
         for j, square in enumerate(row):
             if square == 0:
                 new_board_array[i][j] = players_turn
-                yield new_board_array
+                yield copy.deepcopy(new_board_array)
                 new_board_array[i][j] = 0
-    yield StopIteration
+    raise StopIteration
 
 
 class Node:

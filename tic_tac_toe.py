@@ -107,8 +107,11 @@ class WhosTurnGenerator():
             self.starting_player = 2
 
     def __iter__(self):
-        self.current_player = self.starting_player
-        return self.current_player
+        if self.starting_player == 2:
+            self.current_player = 1
+        else:
+            self.current_player = 2
+        return self
 
     def __next__(self):
         if self.current_player == 1:

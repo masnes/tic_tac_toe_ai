@@ -1,3 +1,6 @@
+import copy
+
+
 def check_board_horizontally(board_array):
     '''check the horizontal rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
@@ -112,12 +115,13 @@ def gen_play_permutations(board_array, players_turn):
 
     -- board_array: an nxn array holding the current state of play
     -- players_turn: indicates which players turn it is to play'''
+    new_board_array = copy.deepcopy(board_array)
     for i, row in board_array:
         for j, square in row:
             if square == 0:
-                board_array[i][j] = players_turn
-                yield board_array
-                board_array[i][j] = 0
+                new_board_array[i][j] = players_turn
+                yield new_board_array
+                new_board_array[i][j] = 0
     yield StopIteration
 
 

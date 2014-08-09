@@ -129,6 +129,19 @@ class WhosTurnGenerator():
         return self.current_player
 
 
+def copy_list_of_lists(board_array):
+    '''Given a list of lists (a board_array), produce a copy of all items within
+    that list and return the copy. Useful for avoiding python pass-by-reference
+    issues
+
+    -- board_array: an nxn array holding the current state of play'''
+    new_board_array = []
+    for row in board_array:
+        new_row = list(row)
+        new_board_array.append(new_row)
+    return new_board_array
+
+
 def gen_play_permutations(board_array, players_turn):
     '''Gens each possible move left in the board for a given player
 

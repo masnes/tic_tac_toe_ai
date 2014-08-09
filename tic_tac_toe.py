@@ -1,4 +1,3 @@
-import copy
 import queue
 
 
@@ -147,13 +146,12 @@ def gen_play_permutations(board_array, players_turn):
 
     -- board_array: an nxn array holding the current state of play
     -- players_turn: indicates which players turn it is to play'''
-    new_board_array = copy.deepcopy(board_array)
     for i, row in enumerate(board_array):
         for j, square in enumerate(row):
             if square == 0:
+                new_board_array = copy_list_of_lists(board_array)
                 new_board_array[i][j] = players_turn
-                yield copy.deepcopy(new_board_array)
-                new_board_array[i][j] = 0
+                yield new_board_array
     raise StopIteration
 
 

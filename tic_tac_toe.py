@@ -96,6 +96,8 @@ def count_zeros(board_array):
 
 
 def swap_players(player):
+    '''swaps between player 1 and player 2'''
+    assert player == 1 or player == 2, "passed invalid player to swap_players"
     if player == 2:
         return 1
     else:
@@ -279,6 +281,10 @@ def build_decision_tree(computer_goes_first=True, board_dimensions=3,
 
 
 def print_tree_structure(root):
+    '''Prints current tree structure. For debugging purposes
+
+    root -- the root node for the tree (or whatever node is to be treated as
+    such)'''
     fifo = queue.Queue()
     fifo.put(root)
     next_item = fifo.get()

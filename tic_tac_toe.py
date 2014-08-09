@@ -272,10 +272,10 @@ def build_decision_tree(computer_goes_first=True, board_dimensions=3,
         computer_player = 2
 
     root = Node(None, board_array, computer_player)
-    for n in gen_play_permutations(board_array):
-        # new_node = Node(root,
-        pass
+    starting_player = 1
+    add_nodes_recursively(root, starting_player, max_depth)
 
+    return root
 
 if __name__ == '__main__':
     # some throwaway code to keep pylint happy

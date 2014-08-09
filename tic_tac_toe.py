@@ -202,7 +202,21 @@ def add_node_to_tree(board_array, parent_node):
     return new_child
 
 
-def add_nodes_recursively(parent_node, next_player, max_depth):
+def get_new_depth(max_depth):
+    '''reduce max_depth by one if max_depth is a number. If max_depth is None, keep
+    it as None
+
+    max_depth -- a measure of how many more recursions are allowed. Once this
+    reaches 0 recursion stops. If None, infinite recursions are allowed (the
+    recursion must be stopped by a non-depth-related base case)'''
+    if max_depth is not None:
+        new_depth = max_depth - 1
+    else:
+        new_depth = None
+    return new_depth
+
+
+def add_nodes_recursively(parent_node, player_turn, max_depth):
     # recursive base cases
     if parent_node.winner:
         print("current:current, {0} {1}".format(parent_node.winner,

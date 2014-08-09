@@ -277,26 +277,31 @@ def build_decision_tree(computer_goes_first=True, board_dimensions=3,
 
     return root
 
-if __name__ == '__main__':
-    # some throwaway code to keep pylint happy
-    check_board([[1, 1, 1], [2, 2, 2], [0, 1, 0]])
-    Node(None,  [[1, 1, 1], [2, 2, 2], [0, 1, 0]])
-    for board in gen_play_permutations([[1, 1, 1], [2, 2, 2], [0, 1, 0]], 1):
-        print(board)
-    else:  # really should be "then:"
-        print("done with gen_play_permutations")
 
-    for i in range(5):
-        new_board = build_new_board_array(i)
-        print(new_board)
 def print_tree_structure(root):
     fifo = queue.Queue()
     fifo.put(root)
     next_item = fifo.get()
     while next_item:
         num_children = len(next_item.children)
-        print(next_item.children)
         print(num_children)
-        for child in next_item.children:
-            fifo.put(child)
-        next_item = fifo.get()
+        if num_children:
+            for child in next_item.children:
+                fifo.put(child)
+        if not fifo.empty():
+            next_item = fifo.get()
+        else:
+            next_item = None
+
+
+if __name__ == '__main__':
+    # board1 = [[0, 0, 1], [0, 0, 0], [0, 0, 0]]
+    # some throwaway code to keep pylint happy
+    # check_board([[1, 1, 1], [2, 2, 2], [0, 1, 0]])
+    #     print(board)
+    for board in gen_play_permutations([[1, 1, 1], [1, 1, 1], [1, 1, 1]], 2):
+        print(board)
+    # else:  # really should be "then:"
+
+    root = build_decision_tree(True, 3, None)
+    # print_tree_structure(root)

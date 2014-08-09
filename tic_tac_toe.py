@@ -223,21 +223,17 @@ def add_nodes_recursively(parent_node, player_turn, max_depth):
     if max_depth == 0:
         return
 
-    player_turn = next_player
+    # build children
     for board_variation in gen_play_permutations(parent_node.board_array,
                                                  player_turn):
         child = Node(parent_node, board_variation)
-        child = Node(parent_node, board_variation)
         parent_node.add_child(child)
 
-    # change state before adding children's children
-    next_player = swap_players(next_player)
-    if max_depth is not None:
-        new_depth = max_depth - 1
-    else:
-        new_depth = None
+    # change state before continuing recursion
+    next_player = swap_players(player_turn)
+    new_depth = get_new_depth(max_depth)
 
-    # add children's children
+    # recurse for all children
     for child in parent_node.children:
         add_nodes_recursively(child, next_player, new_depth)
 

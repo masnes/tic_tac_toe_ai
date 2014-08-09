@@ -219,11 +219,8 @@ def get_new_depth(max_depth):
 def add_nodes_recursively(parent_node, player_turn, max_depth):
     # recursive base cases
     if parent_node.winner:
-        print("current:current, {0} {1}".format(parent_node.winner,
-                                                parent_node.board_array))
         return
     if max_depth == 0:
-        print("max_depth")
         return
 
     player_turn = next_player
@@ -242,7 +239,6 @@ def add_nodes_recursively(parent_node, player_turn, max_depth):
 
     # add children's children
     for child in parent_node.children:
-        print("child!")
         add_nodes_recursively(child, next_player, new_depth)
 
 

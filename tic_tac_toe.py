@@ -294,6 +294,26 @@ def print_tree_structure(root):
             next_item = None
 
 
+def test_queue():
+    fifo = queue.Queue()
+    fifo.put(5)
+    next_item = fifo.get()
+    print(next_item)
+    fifo.put(3)
+    fifo.put(7)
+    next_item = fifo.get()
+    print(next_item)
+    next_item = fifo.get()
+    print(next_item)
+    if not queue.Empty():
+        next_item = fifo.get()
+        print(next_item)
+    if not queue.Empty():
+        next_item = fifo.get()
+        print(next_item)
+    print("should be: 5, 3, 7, nothing, nothing")
+
+
 if __name__ == '__main__':
     # board1 = [[0, 0, 1], [0, 0, 0], [0, 0, 0]]
     # some throwaway code to keep pylint happy

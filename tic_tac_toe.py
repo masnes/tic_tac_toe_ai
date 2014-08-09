@@ -84,7 +84,7 @@ def check_board(board_array, n_in_a_row=3):
     return ret
 
 
-# Note: this function not currently in use
+# Note: this function is not currently in use, but is very useful for debugging
 def count_zeros(board_array):
     '''Counts number of zeros in an nxn array
 

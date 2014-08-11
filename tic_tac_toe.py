@@ -166,6 +166,8 @@ class Node:
         -- board_array: a 3x3 2d list with the tic-tac-toe state for this node
         -- computer_value: the value that represents the computer on
         board_array, defaults to 1'''
+        self.child_computer_wins = 0
+        self.child_human_wins = 0
         self.winner = check_board(board_array)
         self.parent = parent
 

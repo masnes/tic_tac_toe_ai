@@ -282,7 +282,7 @@ def build_decision_tree(computer_goes_first=True, board_dimensions=3,
     -- board_dimensions: how big a board to calculate for, base is 3, the
     generic tic tac toe size
 
-    -- depth: How deep a decision tree to build. Pass 0 or None for a full
+    -- depth: How deep a decision tree to build. Pass None for a full
     tree.
 
     Returns: root node of tree'''

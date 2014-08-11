@@ -225,6 +225,9 @@ def add_nodes_recursively(parent_node, player_turn, computer_player,
     -- player_turn: Which player's turn it is to play next
     -- max_depth: how many more levels of recursion are allowed. Infinite if
     None'''
+    # insure correct parameters
+    assert player_turn == 1 or player_turn == 2
+    assert computer_player == 1 or computer_player == 2
 
     # recursive base cases
     if parent_node.winner:

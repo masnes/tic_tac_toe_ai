@@ -350,4 +350,8 @@ if __name__ == '__main__':
     # else:  # really should be "then:"
 
     root = build_decision_tree(True, 3, None)
+    for child in root.children:
+        print("board: {0}, computer wins: {1}, player wins: {2}"
+              .format(child.board_array, child.child_computer_wins,
+                      child.child_human_wins))
     # print_tree_structure(root)

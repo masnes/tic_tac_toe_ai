@@ -158,17 +158,14 @@ def gen_play_permutations(board_array, players_turn):
 class Node:
     '''A node in our list-tree. The node stores information on what it's parent
     is, what it's children are, whether it's a winner, and how many winning
-    children it has'''
+    children it has (0 initially, since it starts with no children)'''
     def __init__(self, parent, board_array, computer_value=1):
         '''initialize a node in the list tree
 
-        parameters
-        parent -- parent node, if any
-        board_array -- a 3x3 2d list with the tic-tac-toe state for this node
-        computer_value -- the value that represents the computer on
-        board_array, defaults to 1
-        '''
-        self.child_wins = 0
+        -- parent: parent node, if any
+        -- board_array: a 3x3 2d list with the tic-tac-toe state for this node
+        -- computer_value: the value that represents the computer on
+        board_array, defaults to 1'''
         self.winner = check_board(board_array)
         self.parent = parent
 

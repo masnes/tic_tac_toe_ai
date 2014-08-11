@@ -215,6 +215,8 @@ def get_new_depth(max_depth):
     return new_depth
 
 
+def add_nodes_recursively(parent_node, player_turn, computer_player,
+                          max_depth):
     '''given a node with a starting board, continuously play out all possible
     tic tac toe games until a player wins. returns the sum of the number of
     wins in all recursions deeper than and within the current recursion
@@ -243,7 +245,16 @@ def get_new_depth(max_depth):
 
     # recurse for all children
     for child in parent_node.children:
-        add_nodes_recursively(child, next_player, new_depth)
+        add_nodes_recursively(child, next_player, computer_player, new_depth)
+
+        # sum wins of children
+        parent_node.child_human_wins += child.child_human_wins
+        parent_node.child_computer_wins += child.child_computer_wins
+        human_player = swap_players(computer_player)
+        if child.winner == computer_player:
+            parent_node.child_computer_wins += 1
+        elif child.winner == human_player:
+            parent_node.child_human_wins += 1
 
 
 def build_new_board_array(dimensions):
@@ -281,7 +292,7 @@ def build_decision_tree(computer_goes_first=True, board_dimensions=3,
 
     root = Node(None, board_array, computer_player)
     starting_player = 1
-    add_nodes_recursively(root, starting_player, max_depth)
+    add_nodes_recursively(root, starting_player, computer_player, max_depth)
 
     return root
 

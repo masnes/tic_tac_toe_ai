@@ -124,7 +124,7 @@ class WhosTurnGenerator():
         return self
 
     def __next__(self):
-        self.current_player = swap_players(self.starting_player)
+        self.current_player = swap_players(self.current_player)
         return self.current_player
 
 

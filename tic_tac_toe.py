@@ -118,6 +118,8 @@ class WhosTurnGenerator():
             self.starting_player = 2
 
     def __iter__(self):
+        '''Initialize the starting player to the wrong value, so that when
+        __next__ is called for the first time, the value returned is correct'''
         self.current_player = swap_players(self.starting_player)
         return self
 

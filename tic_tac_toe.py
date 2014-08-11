@@ -215,16 +215,25 @@ def get_new_depth(max_depth):
     return new_depth
 
 
-def add_nodes_recursively(parent_node, player_turn, max_depth):
+    '''given a node with a starting board, continuously play out all possible
+    tic tac toe games until a player wins. returns the sum of the number of
+    wins in all recursions deeper than and within the current recursion
+
+    -- parent_node: the parent node. Children will be linked with this parent
+    -- player_turn: Which player's turn it is to play next
+    -- max_depth: how many more levels of recursion are allowed. Infinite if
+    None'''
+
     # recursive base cases
     if parent_node.winner:
         return
     if max_depth == 0:
         return
 
-    # build children
+    # build children and sum wins of children
     for board_variation in gen_play_permutations(parent_node.board_array,
                                                  player_turn):
+        # build children
         child = Node(parent_node, board_variation)
         parent_node.add_child(child)
 

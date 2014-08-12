@@ -332,13 +332,13 @@ def debug_swap_players():
             print("debug_swap_players: assertion not raised when passing value"
                   " {0}".format(value))
 
-    player1 = tic_tac_toe.Players.player1
-    player2 = tic_tac_toe.Players.player2
+    player1_value = tic_tac_toe.Player.player1.value
+    player2_value = tic_tac_toe.Player.player2.value
 
-    if tic_tac_toe.swap_players(player1) is not player2:
+    if tic_tac_toe.swap_players(player1_value) is not player2_value:
         print("debug_swap_players: swapping player 1 did not produce player2")
 
-    if tic_tac_toe.swap_players(player2) is not player1:
+    if tic_tac_toe.swap_players(player2_value) is not player1_value:
         print("debug_swap_players: swapping player 2 did not produce player1")
 
 

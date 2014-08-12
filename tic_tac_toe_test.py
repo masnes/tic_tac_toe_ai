@@ -1,4 +1,5 @@
 import tic_tac_toe
+import itertools
 
 
 def debug_node():
@@ -340,8 +341,44 @@ def debug_swap_players():
     if tic_tac_toe.swap_players(player2) is not player1:
         print("debug_swap_players: swapping player 2 did not produce player1")
 
+
+def debug_WhosTurnGenerator():
+    # test with player 1 starting
+    player_one_starts = True
+    player_one_expected_output = [1, 2, 1, 2, 1, 2]
+    player_one_first_6 = itertools.islice(
+        tic_tac_toe.WhosTurnGenerator(player_one_starts), 0, 6)
+    player_one_output = []
+    for item in player_one_first_6:
+        player_one_output.append(item)
+
+    # test with player 2 starting
+    player_two_starts = False
+    player_two_expected_output = [2, 1, 2, 1, 2, 1]
+    player_two_first_6 = itertools.islice(
+        tic_tac_toe.WhosTurnGenerator(player_two_starts), 0, 6)
+    player_two_output = []
+    for item in player_two_first_6:
+        player_two_output.append(item)
+
+    if player_one_output != player_one_expected_output:
+        print("WhosTurnGenerator: player_one_output != "
+              "player_one_expected_output \n \
+              player_one_output: {0} \n \
+              player_one_expected_output {1}"
+              .format(player_one_output, player_one_expected_output))
+
+    if player_two_output != player_two_expected_output:
+        print("WhosTurnGenerator: player_two_output != "
+              "player_two_expected_output \n \
+              player_two_output: {0} \n \
+              player_two_expected_output {1}"
+              .format(player_two_output, player_two_expected_output))
+
+
 if __name__ == "__main__":
     debug_node()
     debug_check_board()
     debug_count_zeros()
     debug_swap_players()
+    debug_WhosTurnGenerator()

@@ -3,6 +3,7 @@ from enum import Enum
 
 
 class Player(Enum):
+    '''defining the different possible values for board spaces'''
     nobody = 0
     player1 = 1
     player2 = 2

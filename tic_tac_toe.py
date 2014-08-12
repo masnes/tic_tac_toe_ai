@@ -1,4 +1,11 @@
 import queue
+from enum import Enum
+
+
+class Player(Enum):
+    nobody = 0
+    player1 = 1
+    player2 = 2
 
 
 def check_board_horizontally(board_array):
@@ -13,7 +20,7 @@ def check_board_horizontally(board_array):
         items = set(horizontal_row)
         if len(items) == 1:
             ret = items.pop()
-            if ret is not 0:
+            if ret is not Player.nobody:
                 break
     return ret
 
@@ -32,7 +39,7 @@ def check_board_vertically(board_array):
         items = set(vertical_row)
         if len(items) == 1:
             ret = items.pop()
-            if ret is not 0:
+            if ret is not Player.nobody:
                 break
     return ret
 
@@ -50,7 +57,8 @@ def check_board_diagonally(board_array, n_in_a_row=3):
     assert num_subarrays == num_items_in_subarray, "Array is not nxn"
 
     ret = 0
-    if board_array[1][1]:  # if there's no center, there's no diagonals
+    # if there's no center, there's no diagonals
+    if board_array[1][1] is not Player.nobody:
         l = len(board_array[0])
         down_right_diagonal = {board_array[i][i] for i in range(0, l)}
         up_right_diagonal = {board_array[i][l-i-1] for i in range(0, l)}
@@ -73,12 +81,12 @@ def check_board(board_array, n_in_a_row=3):
 
     Returns: 0 if no three_in_a_row found,  otherwise the number of the player
              with the (first) three_in_a_row found'''
-    ret = 0
-    if ret == 0:
+    ret = Player.nobody
+    if ret == Player.nobody:
         ret = check_board_horizontally(board_array)
-    if ret == 0:
+    if ret == Player.nobody:
         ret = check_board_diagonally(board_array)
-    if ret == 0:
+    if ret == Player.nobody:
         ret = check_board_vertically(board_array)
     return ret
 
@@ -99,11 +107,11 @@ def swap_players(player):
     '''swaps between player 1 and player 2
 
     -- player: Which player just played (int of either 1 or 2)'''
+    if player == Player.player2:
+        return Player.player1
+    elif player == Player.player1:
+        return Player.player2
     assert player == 1 or player == 2, "passed invalid player to swap_players"
-    if player == 2:
-        return 1
-    else:
-        return 2
 
 
 class WhosTurnGenerator():
@@ -113,9 +121,9 @@ class WhosTurnGenerator():
     with either player one, or player 2 starting'''
     def __init__(self, player_one_starts=True):
         if player_one_starts:
-            self.starting_player = 1
+            self.starting_player = Player.player1
         else:
-            self.starting_player = 2
+            self.starting_player = Player.player2
 
     def __iter__(self):
         '''Initialize the starting player to the wrong value, so that when
@@ -148,7 +156,7 @@ def gen_play_permutations(board_array, players_turn):
     -- players_turn: indicates which players turn it is to play'''
     for i, row in enumerate(board_array):
         for j, square in enumerate(row):
-            if square == 0:
+            if square == Player.nobody:
                 new_board_array = copy_list_of_lists(board_array)
                 new_board_array[i][j] = players_turn
                 yield new_board_array
@@ -226,8 +234,9 @@ def add_nodes_recursively(parent_node, player_turn, computer_player,
     -- max_depth: how many more levels of recursion are allowed. Infinite if
     None'''
     # insure correct parameters
-    assert player_turn == 1 or player_turn == 2
-    assert computer_player == 1 or computer_player == 2
+    assert player_turn == Player.player1 or player_turn == Player.player2
+    assert computer_player == Player.player1 or computer_player == \
+        Player.player2
 
     # recursive base cases
     if parent_node.winner:
@@ -289,12 +298,12 @@ def build_decision_tree(computer_goes_first=True, board_dimensions=3,
     board_array = build_new_board_array(board_dimensions)
 
     if computer_goes_first:
-        computer_player = 1
+        computer_player = Player.player1
     else:
-        computer_player = 2
+        computer_player = Player.player2
 
     root = Node(None, board_array, computer_player)
-    starting_player = 1
+    starting_player = Player.player1
     add_nodes_recursively(root, starting_player, computer_player, max_depth)
 
     return root

@@ -10,10 +10,10 @@ def check_board_horizontally(board_array):
     # check horizontal rows
     ret = 0
     for horizontal_row in board_array:
-        if horizontal_row[0] is not 0:
-            items = set(horizontal_row)
-            if len(items) == 1:
-                ret = items.pop()
+        items = set(horizontal_row)
+        if len(items) == 1:
+            ret = items.pop()
+            if ret is not 0:
                 break
     return ret
 
@@ -29,10 +29,10 @@ def check_board_vertically(board_array):
     # note that vertical_row is a tuple, while in check_board_horizontally
     # it's a list. This doesn't affect the (current) implemenation
     for vertical_row in zip(*board_array):
-        if vertical_row[0] is not 0:
-            items = set(vertical_row)
-            if len(items) == 1:
-                ret = items.pop()
+        items = set(vertical_row)
+        if len(items) == 1:
+            ret = items.pop()
+            if ret is not 0:
                 break
     return ret
 

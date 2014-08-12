@@ -305,6 +305,22 @@ def debug_count_zeros():
                                                     expected_num_zeros))
 
 
+def check_for_assertion_error(function, values_to_pass):
+    '''checks to see if a given function outpus assertion errors with
+    specified arguments
+
+    -- function: the function that is being tested
+
+    -- values_to_pass: a list (a tuple is also acceptable) of values to pass to
+                       the function in question'''
+    assertion_raised = False
+    try:
+        function(*values_to_pass)
+    except AssertionError:
+        assertion_raised = True
+    return assertion_raised
+
+
 if __name__ == "__main__":
     debug_node()
     debug_check_board()

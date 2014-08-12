@@ -247,23 +247,6 @@ known_values = (([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 0, 0, 0, 0),
 
 
 def debug_check_board():
-    boardvalhorizontal = 0
-    boardvalvertical = 0
-    boardvaldiagonal = 0
-    boardvalnone = 0
-    boardhorizontal = [[1, 1, 1], [2, 1, 2], [1, 2, 1]]
-    boardvertical = [[0, 2, 0], [1, 2, 2], [1, 2, 1]]
-    boarddiagonal = [[1, 2, 1], [2, 1, 2], [1, 2, 1]]
-    boardnone = [[0, 0, 0], [2, 1, 2], [1, 2, 1]]
-    boardvalhorizontal = tic_tac_toe.check_board(boardhorizontal)
-    boardvalvertical = tic_tac_toe.check_board(boardvertical)
-    boardvaldiagonal = tic_tac_toe.check_board(boarddiagonal)
-    boardvalnone = tic_tac_toe.check_board(boardnone)
-    print("boardvalnone = {0}, expected")
-    print("boardvalnone: {0}, boardvalhorizontal: {1}, boardvalvertical: {2}, \
-          boardvaldiagonal: {3}".format(boardvalnone, boardvalhorizontal,
-                                        boardvalvertical, boardvaldiagonal))
-
     for info in known_values:
         boardval = tic_tac_toe.check_board(info[0])
         boardval_horizontal = tic_tac_toe.check_board_horizontally(info[0])

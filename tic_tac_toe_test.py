@@ -273,6 +273,40 @@ def debug_check_board():
                           expected_boardval_diagonal))
     return
 
+
+# format: board_array, expected_num_zeros
+count_zeros_variations = (([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 9),
+                          ([[1, 1, 1], [1, 1, 1], [1, 1, 1]], 0),
+                          ([[2, 2, 2], [2, 2, 2], [2, 2, 2]], 0),
+                          ([[0, 0, 0], [1, 1, 1], [1, 1, 1]], 3),
+                          ([[1, 1, 1], [0, 0, 0], [1, 1, 1]], 3),
+                          ([[1, 1, 1], [1, 1, 1], [0, 0, 0]], 3),
+                          ([[1, 1, 0], [1, 1, 0], [1, 1, 0]], 3),
+                          ([[1, 0, 1], [1, 0, 1], [1, 0, 1]], 3),
+                          ([[0, 1, 1], [1, 1, 1], [1, 1, 1]], 1),
+                          ([[0, 0, 1], [1, 1, 1], [1, 1, 1]], 2),
+                          ([[0, 0, 0], [1, 1, 1], [1, 1, 1]], 3),
+                          ([[0, 0, 0], [0, 1, 1], [1, 1, 1]], 4),
+                          ([[0, 0, 0], [0, 0, 1], [1, 1, 1]], 5),
+                          ([[0, 0, 0], [0, 0, 0], [1, 1, 1]], 6),
+                          ([[0, 0, 0], [0, 0, 0], [0, 1, 1]], 7),
+                          ([[0, 0, 0], [0, 0, 0], [0, 0, 1]], 8),
+                          ([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 9))
+
+
+def debug_count_zeros():
+    for info in count_zeros_variations:
+        board_array = info[0]
+        expected_num_zeros = info[1]
+        zeros_counted = tic_tac_toe.count_zeros(board_array)
+        if zeros_counted is not expected_num_zeros:
+            print("count_zeros: board - {0}, zero count: {1}"
+                  "expected zero count: {2}".format(board_array, zeros_counted,
+                                                    expected_num_zeros))
+
+
 if __name__ == "__main__":
     debug_node()
     debug_check_board()
+    debug_count_zeros()
+    debug_swap_players()

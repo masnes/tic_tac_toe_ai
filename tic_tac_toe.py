@@ -72,7 +72,7 @@ def check_board_diagonally(board_array, n_in_a_row=3):
 
 
 def check_board(board_array, n_in_a_row=3):
-    '''Check a 3x3 tictactoe board for 3 in a row
+    '''Check a nxn tictactoe board for n in a row
 
     -- board_array:  a nxn array representing a tic tac to board,  it
                      is assumed that 0 spaces are unocupied,  and numbered
@@ -172,7 +172,7 @@ class Node:
         '''initialize a node in the list tree
 
         -- parent: parent node, if any
-        -- board_array: a 3x3 2d list with the tic-tac-toe state for this node
+        -- board_array: a nxn 2d list with the tic-tac-toe state for this node
         -- computer_value: the value that represents the computer on
         board_array, defaults to 1'''
         self.child_computer_wins = 0

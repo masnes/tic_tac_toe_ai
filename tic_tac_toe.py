@@ -21,7 +21,7 @@ def check_board_horizontally(board_array):
         items = set(horizontal_row)
         if len(items) == 1:
             ret = items.pop()
-            if ret is not Player.nobody.value:
+            if ret != Player.nobody.value:
                 break
     return ret
 
@@ -40,7 +40,7 @@ def check_board_vertically(board_array):
         items = set(vertical_row)
         if len(items) == 1:
             ret = items.pop()
-            if ret is not Player.nobody.value:
+            if ret != Player.nobody.value:
                 break
     return ret
 
@@ -59,7 +59,7 @@ def check_board_diagonally(board_array, n_in_a_row=3):
 
     ret = 0
     # if there's no center, there's no diagonals
-    if board_array[1][1] is not Player.nobody.value:
+    if board_array[1][1] != Player.nobody.value:
         l = len(board_array[0])
         down_right_diagonal = {board_array[i][i] for i in range(0, l)}
         up_right_diagonal = {board_array[i][l-i-1] for i in range(0, l)}

@@ -156,8 +156,8 @@ def gen_play_permutations(board_array, players_turn):
 
 
 class Node:
-    '''A node in our list-tree. The node stores information on what it's parent
-    is, what it's children are, whether it's a winner, and how many winning
+    '''A node in our list-tree. The node stores information on what its parent
+    is, what its children are, whether it's a winner, and how many winning
     children it has (0 initially, since it starts with no children)'''
     def __init__(self, parent, board_array, computer_value=1):
         '''initialize a node in the list tree

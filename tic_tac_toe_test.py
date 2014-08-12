@@ -300,7 +300,7 @@ def debug_count_zeros():
         expected_num_zeros = info[1]
         zeros_counted = tic_tac_toe.count_zeros(board_array)
         if zeros_counted is not expected_num_zeros:
-            print("count_zeros: board - {0}, zero count: {1}"
+            print("count_zeros: board - {0}, zero count: {1} "
                   "expected zero count: {2}".format(board_array, zeros_counted,
                                                     expected_num_zeros))
 
@@ -329,7 +329,7 @@ def debug_swap_players():
                                                      value)
         if assertion_raised is False:
             print("debug_swap_players: assertion not raised when passing value"
-                  "{0}".format(value))
+                  " {0}".format(value))
 
     player1 = tic_tac_toe.Players.player1
     player2 = tic_tac_toe.Players.player2

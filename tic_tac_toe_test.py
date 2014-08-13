@@ -326,8 +326,9 @@ def debug_swap_players():
     expected_exception_values = [17, -8, tic_tac_toe.Player.nobody.value]
 
     for value in expected_exception_values:
+        value_list = [value]  # need to pass the value in a list
         assertion_raised = check_for_assertion_error(tic_tac_toe.swap_players,
-                                                     [value])
+                                                     value_list)
         if assertion_raised is False:
             print("debug_swap_players: assertion not raised when passing value"
                   " {0}".format(value))

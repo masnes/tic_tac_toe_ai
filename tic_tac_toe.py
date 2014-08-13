@@ -14,7 +14,8 @@ def check_board_horizontally(board_array):
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_array: an nxn array carrying the current board state'''
+    -- board_array: an nxn array carrying the current board state -- guaranteed
+    by check_board function'''
     # check horizontal rows
     ret = 0
     for horizontal_row in board_array:
@@ -31,7 +32,8 @@ def check_board_vertically(board_array):
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_array: an nxn array carrying the current board state'''
+    -- board_array: an nxn array carrying the current board state -- guaranteed
+    by check_board function'''
     # check vertical rows
     ret = 0
     # note that vertical_row is a tuple, while in check_board_horizontally
@@ -51,7 +53,8 @@ def check_board_diagonally(board_array, n_in_a_row=3):
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_array: an nxn array carrying the current board state
+    -- board_array: an nxn array carrying the current board state -- guaranteed
+    by check_board function
     -- n_in_a_row: how many items in a row constitutes a win'''
     num_subarrays = len(board_array)
     num_items_in_subarray = len(board_array[0])

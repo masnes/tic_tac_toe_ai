@@ -56,10 +56,6 @@ def check_board_diagonally(board_array, n_in_a_row=3):
     -- board_array: an nxn array carrying the current board state -- guaranteed
     by check_board function
     -- n_in_a_row: how many items in a row constitutes a win'''
-    num_subarrays = len(board_array)
-    num_items_in_subarray = len(board_array[0])
-    assert num_subarrays == num_items_in_subarray, "Array is not nxn"
-
     ret = 0
     # if there's no center, there's no diagonals
     if board_array[1][1] != Player.nobody.value:

@@ -85,6 +85,11 @@ def check_board(board_array, n_in_a_row=3):
 
     Returns: 0 if no three_in_a_row found,  otherwise the number of the player
              with the (first) three_in_a_row found'''
+    num_subarrays = len(board_array)
+    for horizontal_row in board_array:
+        num_items_in_subarray = len(horizontal_row)
+        assert num_subarrays == num_items_in_subarray, "Array is not nxn"
+
     ret = Player.nobody.value
     if ret == Player.nobody.value:
         ret = check_board_horizontally(board_array)

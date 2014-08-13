@@ -70,6 +70,83 @@ def check_board_diagonally(board_array, n_in_a_row=3):
     return ret
 
 
+def get_diagonals(board_array):
+    '''for an nxn array, find all the diagonals moving from the top left
+    of the array to the bottom right. Returns a tuple of lists of lists of
+    these diagonals
+
+    -- board_array: an nxn array (list of lists)
+
+    Returns: tuple (down_right_diagonals, up_right_diagonals)'''
+    # a diagram of a tic tac toe board is most helpful for understanding this
+    # function. The following applies for any board size, but is best
+    # illustrated by a 3x3 board:
+    #
+    #   0  1 2
+    # 0__|__|__
+    # 1__|__|__
+    # 2  |  |
+    #
+    # Note that we have 5 diagonals going each direction (count them),
+    # for a board size of nxn, there's (n*2)-1 diagonals
+    # we can think of the first 3 (n) diagonals as starting at locations
+    # a[0][?]
+    #
+    # let #'s represent diagonals
+    # let s# stand for the start of diagonal #
+    #
+    #   starting column is determinate
+    #   v
+    #  s3|__|__ < starting
+    #  s2|_3|__ < row
+    #  s1| 2| 3 < is not
+    #
+    # and the rest starting at a[?][0]
+    #
+    #      starting column is not determinate
+    #      v  v
+    #  __|s4|s5 <- starting row is determinate
+    #  __|__|_4
+    #    |  |
+    #
+    # given a starting row, and column position starting_i, starting_j,
+    # we can get the rest of the diagonal by incrementing i, j from
+    # starting_i, starting_j to the end of the board
+    #
+    # the diagonals moving the other direction are similar, but we decrement
+    # i while incrementing j
+    l = len(board_array)
+    num_diagonals_per_direction = len(board_array) * 2 - 1
+
+    down_right_diagonals = []
+    for diagonal in range(num_diagonals_per_direction):
+        n = diagonal
+        starting_i = max(l - n, 0)  # first half+1 diagonals start at a[0][?]
+        starting_j = max(0, n - l)  # second half-1 diagonals start at a[?][0]
+        sub_list = []
+        i, j = starting_i, starting_j
+        while i < l and j < l:
+            sub_list.append(board_array[i][j])
+            i += 1
+            j += 1
+        down_right_diagonals.append(sub_list)
+
+    up_right_diagonals = []
+    for diagonal in range(num_diagonals_per_direction):
+        n = diagonal
+        starting_i = max(l - n, 0)
+        starting_j = max(0, n - l)
+        sub_list = []
+        i, j = starting_i, starting_j
+        while i >= 0 and j < l:
+            sub_list.append(board_array[i][j])
+            i -= 1
+            j += 1
+        up_right_diagonals.append(sub_list)
+
+    return (down_right_diagonals, up_right_diagonals)
+
+
 def check_board(board_array, n_in_a_row=3):
     '''Check a nxn tictactoe board for n in a row
 

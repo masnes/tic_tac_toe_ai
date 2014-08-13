@@ -112,11 +112,12 @@ def swap_players(player):
     '''swaps between player 1 and player 2
 
     -- player: Which player just played (int of either 1 or 2)'''
+    assert player == Player.player1.value or player == Player.player2.value, \
+        "passed invalid player to swap_players"
     if player == Player.player2.value:
         return Player.player1.value
     elif player == Player.player1.value:
         return Player.player2.value
-    assert player == 1 or player == 2, "passed invalid player to swap_players"
 
 
 class WhosTurnGenerator():

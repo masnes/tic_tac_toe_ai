@@ -377,9 +377,54 @@ def debug_WhosTurnGenerator():
               .format(player_two_output, player_two_expected_output))
 
 
+def debug_get_diagonals():
+    # See expected results for board_4x4 if the diagonal locations/directions
+    # are confusing
+
+    #  1 0
+    #  0 1
+    board_2x2 = (
+        [[1, 0], [0, 1]],  # board
+        ([[0], [1, 1], [0]],  # down right diaganol
+         [[1], [0, 0], [1]])  # down left diagonal
+        )
+    #  1 2 1
+    #  2 1 0
+    #  1 0 2
+    board_3x3 = (
+        [[1, 2, 1], [2, 1, 0], [1, 0, 2]],  # board
+        ([[1], [2, 0], [1, 1, 2], [2, 0], [1]],  # down right diaganal
+         [[2], [0, 0], [1, 1, 1], [2, 2], [1]])  # down left diagonal
+    )
+    #  0 1 2 3  v                  v
+    #  0 1 2 3   \ down           / down
+    #  0 1 2 3    \ right        / left
+    #  0 1 2 3     v            v
+    board_4x4 = (
+        [[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]],  # board
+        ([[3], [2, 3], [1, 2, 3], [0, 1, 2, 3], [0, 1, 2], [0, 1], [0]],  # dr
+         [[3], [3, 2], [3, 2, 1], [3, 2, 1, 0], [2, 1, 0], [1, 0], [0]])  # dl
+    )
+
+    boards = (board_2x2[0], board_3x3[0], board_4x4[0])
+    expected_tuples = (board_2x2[1], board_3x3[1], board_4x4[1])
+    results_tuples = [tic_tac_toe.get_diagonals(board) for board in boards]
+
+    num_boards = 3
+    for i in range(num_boards):
+        if expected_tuples[i] != results_tuples[i]:
+            print("get diagonals: for board:")
+            for row in boards[i]:
+                print(row)
+            print("expected: {0}\n"
+                  "got:      {1}".format(expected_tuples[i],
+                                         results_tuples[i]))
+
+
 if __name__ == "__main__":
     debug_node()
     debug_check_board()
     debug_count_zeros()
     debug_swap_players()
     debug_WhosTurnGenerator()
+    debug_get_diagonals()

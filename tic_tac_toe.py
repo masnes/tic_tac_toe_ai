@@ -78,14 +78,19 @@ def get_diagonals(board_array):
     -- board_array: an nxn array (list of lists)
 
     Returns: tuple (down_right_diagonals, up_right_diagonals)'''
+
+    # Note: the module numpy can also be used to get diagonals. As an exercise
+    # for myself, however, I wanted to write this function from scratch
+    #
     # a diagram of a tic tac toe board is most helpful for understanding this
     # function. The following applies for any board size, but is best
     # illustrated by a 3x3 board:
     #
-    #   0  1 2
-    # 0__|__|__
-    # 1__|__|__
-    # 2  |  |
+    #    0  1  2 (j)
+    #  0__|__|__
+    #  1__|__|__
+    #  2  |  |
+    # (i)
     #
     # Note that we have 5 diagonals going each direction (count them),
     # for a board size of nxn, there's (n*2)-1 diagonals
@@ -95,26 +100,37 @@ def get_diagonals(board_array):
     # let #'s represent diagonals
     # let s# stand for the start of diagonal #
     #
+    # direction
+    # v       starting column is not determinate
+    #  \       v  v  v
+    #   \     s3|s2|s1 <- starting row is determinate
+    #    \    __|_3|_2
+    #     v     |  | 3
+    #
+    # and the rest starting at a[0][?]
+    #
     #   starting column is determinate
     #   v
-    #  s3|__|__ < starting
-    #  s2|_3|__ < row
-    #  s1| 2| 3 < is not
-    #
-    # and the rest starting at a[?][0]
-    #
-    #      starting column is not determinate
-    #      v  v
-    #  __|s4|s5 <- starting row is determinate
-    #  __|__|_4
-    #    |  |
+    #  __|__|__
+    #  s4|__|__ < starting row
+    #  s5| 4|   < is not
     #
     # given a starting row, and column position starting_i, starting_j,
     # we can get the rest of the diagonal by incrementing i, j from
     # starting_i, starting_j to the end of the board
     #
-    # the diagonals moving the other direction are similar, but we decrement
-    # i while incrementing j
+    # the diagonals moving the other direction are similar, but not exactly the
+    # same. We need to rotate the above diagram, and then move in the other
+    # direction:
+    #
+    #    0  1  3 (j)      v
+    #  0 s5|s4|s3        /
+    #    --+--+--       /  new
+    #  1  4| 3|s2      /   direction
+    #    --+--+--     /
+    #  2  3| 2|s1    v
+    # (i)
+
     l = len(board_array)
     num_diagonals_per_direction = len(board_array) * 2 - 1
 

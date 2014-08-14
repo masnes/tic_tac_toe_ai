@@ -131,36 +131,42 @@ def get_diagonals(board_array):
     #  2  3| 2|s1    v
     # (i)
 
-    l = len(board_array)
+    length = len(board_array)
     num_diagonals_per_direction = len(board_array) * 2 - 1
 
     down_right_diagonals = []
-    for diagonal in range(num_diagonals_per_direction):
-        n = diagonal
-        starting_i = max(l - n, 0)  # first half+1 diagonals start at a[0][?]
-        starting_j = max(0, n - l)  # second half-1 diagonals start at a[?][0]
+    for n in range(num_diagonals_per_direction):
+        # first ceiling(half) diagonals start at a[?][0]
+        # second floor(half) diagonals start at a[0][?]
         sub_list = []
-        i, j = starting_i, starting_j
-        while i < l and j < l:
+        starting_i = max(n-length+1, 0)
+        starting_j = max(0, length-n-1)
+        i = starting_i
+        j = starting_j
+        while i < length and j < length:
             sub_list.append(board_array[i][j])
             i += 1
             j += 1
         down_right_diagonals.append(sub_list)
 
-    up_right_diagonals = []
-    for diagonal in range(num_diagonals_per_direction):
-        n = diagonal
-        starting_i = max(l - n, 0)
-        starting_j = max(0, n - l)
+    down_left_diagonals = []
+    for n in range(num_diagonals_per_direction):
+        # first ceiling(half) diagonals start at a[?][n-1]
+        # second floor(half) diagonals start at a[0][?]
         sub_list = []
-        i, j = starting_i, starting_j
-        while i >= 0 and j < l:
+        starting_i = max(length-n-1, 0)
+        starting_j = min(length-1, num_diagonals_per_direction - n - 1)
+        i = starting_i
+        j = starting_j
+        while i < length and j >= 0:
             sub_list.append(board_array[i][j])
-            i -= 1
-            j += 1
-        up_right_diagonals.append(sub_list)
+            i += 1
+            j -= 1
+        down_left_diagonals.append(sub_list)
 
-    return (down_right_diagonals, up_right_diagonals)
+    return (down_right_diagonals, down_left_diagonals)
+
+
 
 
 def check_board(board_array, n_in_a_row=3):

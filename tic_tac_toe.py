@@ -206,8 +206,8 @@ def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
 def check_diagonals_partially(board_array, n_in_a_row_position_array,
                               n_in_a_row):
     '''for an nxn array, find all the diagonals moving from the top left
-    of the array to the bottom right. Returns a tuple of lists of lists of
-    these diagonals
+    of the array to the bottom right. Alter a second inputted array to note the
+    positions of these diagonals
 
     -- board_array: an nxn array (list of lists)
 
@@ -216,9 +216,10 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     # Note: the module numpy can also be used to get diagonals. As an exercise
     # for myself, however, I wanted to write this function from scratch
     #
-    # a diagram of a tic tac toe board is most helpful for understanding this
-    # function. The following applies for any board size, but is best
-    # illustrated by a 3x3 board:
+    # a diagram of a tic tac toe board is most helpful for understanding the
+    # diagonal traversing part of this function (by far the most complex part).
+    # The following applies for any board size, but is best illustrated by a
+    # 3x3 board:
     #
     #    0  1  2 (j)
     #  0__|__|__

@@ -4,6 +4,9 @@ from enum import Enum
 
 class Player(Enum):
     '''defining the different possible values for board spaces'''
+    # note: keep the values as a count from 0! This allows this class to
+    # act as a hash in addition to other enumeration functions.
+    # This behavior is expected in function: note_potential_n_in_a_row
     nobody = 0
     player1 = 1
     player2 = 2
@@ -161,6 +164,43 @@ def make_list(board_array, starting_i, starting_j, delta_i, delta_j,
         i += delta_i
         j += delta_j
     return new_list
+
+
+def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
+    '''Call this function if a potential n_in_a_row is found (n-1 squares lined
+    up horizontally, vertically, or diagonally, with the final square empty).
+    It notes the location of the n_in_a_row, and the player who can
+    make an n_in_a_row there in a provided n_in_a_row_position_array. If
+    another n_in_a_row has been found already in the same position, this
+    function will update the state of n_in_a_row_position_array to record that
+    both players can make an n_in_a_row by playing there
+
+    -- n_in_a_row_position_array: a board_array sized array used for noting
+       where n_in_a_row's could potentially be produced next turn, and who they
+       could be produced by
+
+    -- player: the player who can potentially create an n_in_a_row
+    -- i: row at which n_in_a_row could be produced
+    -- j: column at which n_in_a_row could be produced'''
+
+    assert player == Player(player).value,\
+        "Unrecognized player given to n_in_a_row_position_array"
+    assert player != Player.nobody.value, \
+        "Noting that nobody is making a potential n_in_a_row is useless"
+
+    current = n_in_a_row_position_array[i][j]
+    currently_nobody_wins_at_this_position = (current == Player.nobody.value)
+    currently_player1_wins_at_this_position = (current == Player.player1.value)
+    currently_player2_wins_at_this_position = (current == Player.player2.value)
+    a_new_player_wins_at_this_position = (current == player)
+
+    if currently_nobody_wins_at_this_position:
+        n_in_a_row_position_array[i][j] = player
+    elif currently_player1_wins_at_this_position or \
+            currently_player2_wins_at_this_position:
+        if a_new_player_wins_at_this_position:
+            n_in_a_row_position_array[i][j] = Player.both.value
+    return
 
 
 def check_diagonals_partially(board_array, n_in_a_row_position_array,

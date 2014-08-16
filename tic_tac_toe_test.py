@@ -247,12 +247,13 @@ known_values = (([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 0, 0, 0, 0),
                 ([[2, 2, 2], [2, 2, 2], [2, 2, 2]], 2, 2, 2, 2))
 
 
-def debug_check_board():
+def debug_check_board_full_n_in_a_row():
     for info in known_values:
-        boardval = tic_tac_toe.check_board(info[0])
-        boardval_horizontal = tic_tac_toe.check_board_horizontally(info[0])
-        boardval_vertical = tic_tac_toe.check_board_vertically(info[0])
-        boardval_diagonal = tic_tac_toe.check_board_diagonally(info[0])
+        boardval = tic_tac_toe.check_board_full_n_in_a_row(info[0])
+        boardval_horizontal = \
+            tic_tac_toe.check_board_horizontally_full(info[0])
+        boardval_vertical = tic_tac_toe.check_board_vertically_full(info[0])
+        boardval_diagonal = tic_tac_toe.check_board_diagonally_full(info[0])
         expected_boardval = info[1]
         expected_boardval_horizontal = info[2]
         expected_boardval_vertical = info[3]
@@ -423,7 +424,7 @@ def debug_get_diagonals():
 
 if __name__ == "__main__":
     debug_node()
-    debug_check_board()
+    debug_check_board_full_n_in_a_row()
     debug_count_zeros()
     debug_swap_players()
     debug_WhosTurnGenerator()

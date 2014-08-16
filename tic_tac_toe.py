@@ -97,6 +97,46 @@ def check_board_full_n_in_a_row(board_array):
     return ret
 
 
+def check_for_almost_n_in_a_row(values_sequence, n_in_a_row):
+    '''Takes a list of values of size n_in_a_row. Then checks that list
+    for a scenario where all but one of the values represent one player,
+    and the final value represents unplayed. In other words, checks for a
+    situation where one additional play would win the game
+
+    -- values_sequence: A list of values representing a partial slice of a
+    board row, column, or diagonal. Must be the same length as n_in_a_row
+
+    -- n_in_a_row: How many consecutive values constitutes an n_in_a_row'''
+    assert len(values_sequence) == n_in_a_row, \
+        "values sequence not the same length as an expected n-in-a-row"
+    # counters
+    unplayed_count = 0
+    # how far from the start of the list the first unplayed square is
+    unplayed_offset = 0
+    player1_count = 0
+    player2_count = 0
+
+    # count occurences
+    for offset, value in enumerate(values_sequence):
+        if value == Player.player1.value:
+            player1_count += 1
+        elif value == Player.player2.value:
+            player2_count += 1
+        elif value == Player.nobody.value:
+            unplayed_offset = offset
+            unplayed_count += 1
+
+    # check for almost_n_in_a_row
+    if unplayed_count == 1:
+        if player1_count == n_in_a_row - 1:
+            return Player.player1.value, unplayed_offset
+        elif player2_count == n_in_a_row - 1:
+            return Player.player2.value, unplayed_offset
+
+    # if no almost_n_in_a_row found
+    return None, None
+
+
 def check_diagonals_partially(board_array, n_in_a_row_position_array,
                               n_in_a_row):
     '''for an nxn array, find all the diagonals moving from the top left

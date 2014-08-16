@@ -1,3 +1,4 @@
+import cProfile
 import queue
 from enum import Enum
 
@@ -570,10 +571,9 @@ if __name__ == '__main__':
     for board in gen_play_permutations([[1, 1, 1], [1, 1, 1], [1, 1, 1]], 2):
         print(board)
     # else:  # really should be "then:"
-
-    root = build_decision_tree(True, 3, None)
-    for child in root.children:
-        print("board: {0}, computer wins: {1}, player wins: {2}"
-              .format(child.board_array, child.child_computer_wins,
-                      child.child_human_wins))
+    cProfile.run('root = build_decision_tree(True, 3, None)')
+    # for child in root.children:
+    #     print("board: {0}, computer wins: {1}, player wins: {2}"
+    #           .format(child.board_array, child.child_computer_wins,
+    #                   child.child_human_wins))
     # print_tree_structure(root)

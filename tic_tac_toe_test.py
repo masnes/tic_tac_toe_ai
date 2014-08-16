@@ -428,4 +428,3 @@ if __name__ == "__main__":
     debug_count_zeros()
     debug_swap_players()
     debug_WhosTurnGenerator()
-    debug_get_diagonals()

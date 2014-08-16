@@ -192,7 +192,7 @@ def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
     currently_nobody_wins_at_this_position = (current == Player.nobody.value)
     currently_player1_wins_at_this_position = (current == Player.player1.value)
     currently_player2_wins_at_this_position = (current == Player.player2.value)
-    a_new_player_wins_at_this_position = (current == player)
+    a_new_player_wins_at_this_position = (current != player)
 
     if currently_nobody_wins_at_this_position:
         n_in_a_row_position_array[i][j] = player

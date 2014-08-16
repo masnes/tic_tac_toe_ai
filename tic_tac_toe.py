@@ -137,6 +137,32 @@ def check_for_almost_n_in_a_row(values_sequence, n_in_a_row):
     return None, None
 
 
+def make_list(board_array, starting_i, starting_j, delta_i, delta_j,
+              max_length):
+    '''given a board_array, a position on that board array, a direction to
+    travel from that position, and a number of values to try for: make a list
+    of that size, by moving in that direction over the board
+
+    -- board_array: an nxn array carrying the current board state
+    -- starting_i: starting row position on the board
+    -- starting_j: starting column position on the board
+    -- delta_i: rate and direction that we move over rows in the board
+    -- delta_j: rate and direction that we move over columns in the board
+    -- max_length: max length of the list that we make'''
+    new_list = []
+    i_max = min(len(board_array) - 1, max_length)
+    j_max = min(len(board_array) - 1, max_length)
+    i_min = max(0, starting_i - abs(max_length * delta_i))
+    j_min = max(0, starting_j - abs(max_length * delta_j))
+    i = starting_i
+    j = starting_j
+    while i_min <= i <= i_max and j_min <= j <= j_max:
+        new_list.append(board_array[i][j])
+        i += delta_i
+        j += delta_j
+    return new_list
+
+
 def check_diagonals_partially(board_array, n_in_a_row_position_array,
                               n_in_a_row):
     '''for an nxn array, find all the diagonals moving from the top left

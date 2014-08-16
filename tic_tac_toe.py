@@ -7,9 +7,10 @@ class Player(Enum):
     nobody = 0
     player1 = 1
     player2 = 2
+    both = 3
 
 
-def check_board_horizontally(board_array):
+def check_board_horizontally_full(board_array):
     '''check the horizontal rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
@@ -27,7 +28,7 @@ def check_board_horizontally(board_array):
     return ret
 
 
-def check_board_vertically(board_array):
+def check_board_vertically_full(board_array):
     '''check the vertical rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
@@ -47,8 +48,8 @@ def check_board_vertically(board_array):
     return ret
 
 
-# TODO: check boards in true n_in_a_row style
-def check_board_diagonally(board_array, n_in_a_row=3):
+# DONE: check boards in true n_in_a_row style
+def check_board_diagonally_full(board_array):
     '''check the diagonal cross section of a nxn gameboard,  returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
@@ -70,7 +71,34 @@ def check_board_diagonally(board_array, n_in_a_row=3):
     return ret
 
 
-def get_diagonals(board_array):
+def check_board_full_n_in_a_row(board_array):
+    '''Check a nxn tictactoe board for n in a row
+
+    -- board_array:  a nxn array representing a tic tac to board,  it
+                     is assumed that 0 spaces are unocupied,  and numbered
+                     spaces are occupied by a player represented by that number
+
+    -- n_in_a_row: how many items in a row constitutes a win
+
+    Returns: 0 if no three_in_a_row found,  otherwise the number of the player
+             with the (first) three_in_a_row found'''
+    num_subarrays = len(board_array)
+    for horizontal_row in board_array:
+        num_items_in_subarray = len(horizontal_row)
+        assert num_subarrays == num_items_in_subarray, "Array is not nxn"
+
+    ret = Player.nobody.value
+    if ret == Player.nobody.value:
+        ret = check_board_horizontally_full(board_array)
+    if ret == Player.nobody.value:
+        ret = check_board_diagonally_full(board_array)
+    if ret == Player.nobody.value:
+        ret = check_board_vertically_full(board_array)
+    return ret
+
+
+def check_diagonals_partially(board_array, n_in_a_row_position_array,
+                              n_in_a_row):
     '''for an nxn array, find all the diagonals moving from the top left
     of the array to the bottom right. Returns a tuple of lists of lists of
     these diagonals
@@ -151,7 +179,7 @@ def get_diagonals(board_array):
 
     down_left_diagonals = []
     for n in range(num_diagonals_per_direction):
-        # first ceiling(half) diagonals start at a[?][n-1]
+        # first ceiling(half) diagonals start at a[?][length-1]
         # second floor(half) diagonals start at a[0][?]
         sub_list = []
         starting_i = max(length-n-1, 0)
@@ -165,34 +193,6 @@ def get_diagonals(board_array):
         down_left_diagonals.append(sub_list)
 
     return (down_right_diagonals, down_left_diagonals)
-
-
-
-
-def check_board(board_array, n_in_a_row=3):
-    '''Check a nxn tictactoe board for n in a row
-
-    -- board_array:  a nxn array representing a tic tac to board,  it
-                     is assumed that 0 spaces are unocupied,  and numbered
-                     spaces are occupied by a player represented by that number
-
-    -- n_in_a_row: how many items in a row constitutes a win
-
-    Returns: 0 if no three_in_a_row found,  otherwise the number of the player
-             with the (first) three_in_a_row found'''
-    num_subarrays = len(board_array)
-    for horizontal_row in board_array:
-        num_items_in_subarray = len(horizontal_row)
-        assert num_subarrays == num_items_in_subarray, "Array is not nxn"
-
-    ret = Player.nobody.value
-    if ret == Player.nobody.value:
-        ret = check_board_horizontally(board_array)
-    if ret == Player.nobody.value:
-        ret = check_board_diagonally(board_array)
-    if ret == Player.nobody.value:
-        ret = check_board_vertically(board_array)
-    return ret
 
 
 # Note: this function is not currently in use, but is very useful for debugging
@@ -281,7 +281,7 @@ class Node:
         board_array, defaults to 1'''
         self.child_computer_wins = 0
         self.child_human_wins = 0
-        self.winner = check_board(board_array)
+        self.winner = check_board_full_n_in_a_row(board_array)
         self.parent = parent
 
         self.children = []

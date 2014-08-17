@@ -138,10 +138,10 @@ def check_for_almost_n_in_a_row(values_sequence, n_in_a_row):
         "values sequence not the same length as an expected n-in-a-row"
     # counters
     unplayed_count = 0
-    # how far from the start of the list the first unplayed square is
-    unplayed_offset = 0
     player1_count = 0
     player2_count = 0
+    # how far from the start of the list the first unplayed square is
+    unplayed_offset = 0
 
     # count occurences
     for offset, value in enumerate(values_sequence):

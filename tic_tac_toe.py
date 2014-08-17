@@ -303,15 +303,20 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     for n in range(num_diagonals_per_direction):
         # first ceiling(half) diagonals start at a[?][0]
         # second floor(half) diagonals start at a[0][?]
-        sub_list = []
-        starting_i = max(n-length+1, 0)
-        starting_j = max(0, length-n-1)
-        i = starting_i
-        j = starting_j
-        while i < length and j < length:
-            sub_list.append(board_array[i][j])
-            i += 1
-            j += 1
+        i = max(n-length+1, 0)
+        j = max(0, length-n-1)
+        delta_i = 1
+        delta_j = 1
+        while i + n_in_a_row - 1 < length and j + n_in_a_row - 1 < length:
+            sub_list = make_list(board_array, i, j, delta_i, delta_j,
+                                 n_in_a_row)
+            player, offset = check_for_almost_n_in_a_row(sub_list, n_in_a_row)
+            if player is not None:
+                note_potential_n_in_a_row(n_in_a_row_position_array, player,
+                                          i + offset, j + offset)
+
+            i += delta_i
+            j += delta_j
         down_right_diagonals.append(sub_list)
 
     down_left_diagonals = []
@@ -319,14 +324,20 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
         # first ceiling(half) diagonals start at a[?][length-1]
         # second floor(half) diagonals start at a[0][?]
         sub_list = []
-        starting_i = max(length-n-1, 0)
-        starting_j = min(length-1, num_diagonals_per_direction - n - 1)
-        i = starting_i
-        j = starting_j
+        i = max(length-n-1, 0)
+        j = min(length-1, num_diagonals_per_direction - n - 1)
+        delta_i = 1
+        delta_j = -1
         while i < length and j >= 0:
-            sub_list.append(board_array[i][j])
-            i += 1
-            j -= 1
+            sub_list = make_list(board_array, i, j, delta_i, delta_j,
+                                 n_in_a_row)
+            player, offset = check_for_almost_n_in_a_row(sub_list, n_in_a_row)
+            if player is not None:
+                note_potential_n_in_a_row(n_in_a_row_position_array, player,
+                                          i + offset, j + offset)
+            sub_list.append((board_array[i][j], (i, j)))
+            i += delta_i
+            j -= delta_j
         down_left_diagonals.append(sub_list)
 
     return (down_right_diagonals, down_left_diagonals)

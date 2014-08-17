@@ -120,7 +120,7 @@ def check_board_full_n_in_a_row(board_array):
     return ret
 
 
-def check_for_almost_n_in_a_row(values_sequence, n_in_a_row):
+def check_list_for_almost_n_in_a_row(values_sequence, n_in_a_row):
     '''Takes a list of values of size n_in_a_row. Then checks that list
     for a scenario where all but one of the values represent one player,
     and the final value represents unplayed. In other words, checks for a
@@ -310,7 +310,8 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
         while i + n_in_a_row - 1 < length and j + n_in_a_row - 1 < length:
             sub_list = make_list(board_array, i, j, delta_i, delta_j,
                                  n_in_a_row)
-            player, offset = check_for_almost_n_in_a_row(sub_list, n_in_a_row)
+            player, offset = check_list_for_almost_n_in_a_row(sub_list,
+                                                              n_in_a_row)
             if player is not None:
                 note_potential_n_in_a_row(n_in_a_row_position_array, player,
                                           i + offset, j + offset)
@@ -331,7 +332,8 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
         while i < length and j >= 0:
             sub_list = make_list(board_array, i, j, delta_i, delta_j,
                                  n_in_a_row)
-            player, offset = check_for_almost_n_in_a_row(sub_list, n_in_a_row)
+            player, offset = check_list_for_almost_n_in_a_row(sub_list,
+                                                              n_in_a_row)
             if player is not None:
                 note_potential_n_in_a_row(n_in_a_row_position_array, player,
                                           i + offset, j + offset)

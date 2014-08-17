@@ -129,7 +129,11 @@ def check_for_almost_n_in_a_row(values_sequence, n_in_a_row):
     -- values_sequence: A list of values representing a partial slice of a
     board row, column, or diagonal. Must be the same length as n_in_a_row
 
-    -- n_in_a_row: How many consecutive values constitutes an n_in_a_row'''
+    -- n_in_a_row: How many consecutive values constitutes an n_in_a_row
+
+    Returns tuple of:
+        (player who has an almost n_in_a_row for this list,
+         offset from the beginning of the list where the n_in_a_row occurs)'''
     assert len(values_sequence) == n_in_a_row, \
         "values sequence not the same length as an expected n-in-a-row"
     # counters

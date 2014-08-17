@@ -235,17 +235,20 @@ def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
 
 def check_diagonals_partially(board_array, n_in_a_row_position_array,
                               n_in_a_row):
-    '''for an nxn array, find all the diagonals moving from the top left
-    of the array to the bottom right. Alter a second inputted array to note the
-    positions of these diagonals
+    '''for an nxn array, look through the diagonal positions for almost
+    n_in_a_row's (n spaces lined up, where n-1 of them have been played on by
+    the same player, and the last one is empty. In other words, a situation
+    where a player could potentially win on their next). Then note these
+    positions, and the potentally winnning player, down on the
+    given n_in_a_row_position_array.
 
     -- board_array: an nxn array (list of lists)
+    -- n_in_a_row_position_array: another nxn array, used for recording the
+       locations of any potential n_in_a_row's.
+    -- n_in_a_row: What length constitutes an n_in_a_row
 
-    Returns: tuple (down_right_diagonals, up_right_diagonals)'''
+    Returns: reference to the n_in_a_row_position_array provided'''
 
-    # Note: the module numpy can also be used to get diagonals. As an exercise
-    # for myself, however, I wanted to write this function from scratch
-    #
     # a diagram of a tic tac toe board is most helpful for understanding the
     # diagonal traversing part of this function (by far the most complex part).
     # The following applies for any board size, but is best illustrated by a
@@ -258,8 +261,8 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     # (i)
     #
     # Note that we have 5 diagonals going each direction (count them),
-    # for a board size of nxn, there's (n*2)-1 diagonals
-    # we can think of the first 3 (n) diagonals as starting at locations
+    # for a board size of lxl, there's (l*2)-1 diagonals
+    # we can think of the first 3 (l) diagonals as starting at locations
     # a[0][?]
     #
     # let #'s represent diagonals
@@ -294,6 +297,23 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     #  1  4| 3|s2      /   direction
     #    --+--+--     /
     #  2  3| 2|s1    v
+    # (i)
+    #
+    # The final thing to note is that we only look at chunks of the diagonal
+    # that are at most n_in_a_row sized. Bigger chunks are broken up into
+    # n_in_a_row sized chunks
+    #
+    # Ex. For n_in_a_row = 2 on a 4x4 board. We'd break up down right diagonal
+    # as follows (into lists represented as a, b, and c):
+    #
+    #    0  1  2  3 (j)
+    #  0 a |  |  |
+    #    --+--+--+--
+    #  1   |ab|  |
+    #    --+--+--+--
+    #  2   |  |bc|
+    #    --+--+--+--
+    #  3   |  |  |c
     # (i)
 
     length = len(board_array)

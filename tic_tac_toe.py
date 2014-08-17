@@ -176,11 +176,17 @@ def make_list(board_array, starting_i, starting_j, delta_i, delta_j,
     -- delta_i: rate and direction that we move over rows in the board
     -- delta_j: rate and direction that we move over columns in the board
     -- max_length: max length of the list that we make'''
+
     new_list = []
-    i_max = min(len(board_array) - 1, max_length)
-    j_max = min(len(board_array) - 1, max_length)
-    i_min = max(0, starting_i - abs(max_length * delta_i))
-    j_min = max(0, starting_j - abs(max_length * delta_j))
+    # get parameters needed to move over array and record values
+    possible_i_movement = abs((max_length-1) * delta_i)
+    possible_j_movement = abs((max_length-1) * delta_j)
+    i_max = min(len(board_array) - 1, starting_i + possible_i_movement)
+    j_max = min(len(board_array) - 1, starting_j + possible_j_movement)
+    i_min = max(0, starting_i - possible_i_movement)
+    j_min = max(0, starting_j - possible_j_movement)
+
+    # move over the array, recording the values found
     i = starting_i
     j = starting_j
     while i_min <= i <= i_max and j_min <= j <= j_max:

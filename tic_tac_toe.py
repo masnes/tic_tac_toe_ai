@@ -297,52 +297,51 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     # (i)
 
     length = len(board_array)
-    num_diagonals_per_direction = len(board_array) * 2 - 1
+    num_diagonals_per_direction = (length*2)-1  # our (l*2)-1 diagonals
 
-    down_right_diagonals = []
+    # look at down right diagonals
     for n in range(num_diagonals_per_direction):
         # first ceiling(half) diagonals start at a[?][0]
         # second floor(half) diagonals start at a[0][?]
         i = max(n-length+1, 0)
-        j = max(0, length-n-1)
+        j = max(length-n-1, 0)
         delta_i = 1
         delta_j = 1
         while i + n_in_a_row - 1 < length and j + n_in_a_row - 1 < length:
-            sub_list = get_part_of_board(board_array, i, j, delta_i, delta_j,
+            board_part = get_part_of_board(board_array, i, j, delta_i, delta_j,
                                            n_in_a_row)
-            player, offset = check_list_for_almost_n_in_a_row(sub_list,
+            player, offset = check_list_for_almost_n_in_a_row(board_part,
                                                               n_in_a_row)
             if player is not None:
+                offset_i = i + (offset * delta_i)
+                offset_j = j + (offset * delta_j)
                 note_potential_n_in_a_row(n_in_a_row_position_array, player,
-                                          i + offset, j + offset)
-
+                                          offset_i, offset_j)
             i += delta_i
             j += delta_j
-        down_right_diagonals.append(sub_list)
 
-    down_left_diagonals = []
+    # look at up right diagonals
     for n in range(num_diagonals_per_direction):
         # first ceiling(half) diagonals start at a[?][length-1]
         # second floor(half) diagonals start at a[0][?]
-        sub_list = []
         i = max(length-n-1, 0)
-        j = min(length-1, num_diagonals_per_direction - n - 1)
+        j = min(length-1, num_diagonals_per_direction-n-1)
         delta_i = 1
         delta_j = -1
         while i < length and j >= 0:
-            sub_list = get_part_of_board(board_array, i, j, delta_i, delta_j,
+            board_part = get_part_of_board(board_array, i, j, delta_i, delta_j,
                                            n_in_a_row)
-            player, offset = check_list_for_almost_n_in_a_row(sub_list,
+            player, offset = check_list_for_almost_n_in_a_row(board_part,
                                                               n_in_a_row)
             if player is not None:
+                offset_i = i + (offset * delta_i)
+                offset_j = j + (offset * delta_j)
                 note_potential_n_in_a_row(n_in_a_row_position_array, player,
-                                          i + offset, j + offset)
-            sub_list.append((board_array[i][j], (i, j)))
+                                          offset_i, offset_j)
             i += delta_i
-            j -= delta_j
-        down_left_diagonals.append(sub_list)
+            j += delta_j
 
-    return (down_right_diagonals, down_left_diagonals)
+    return n_in_a_row_position_array
 
 
 def count_value(board_array, value):

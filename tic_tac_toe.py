@@ -520,10 +520,9 @@ def add_nodes_recursively(parent_node, player_turn, computer_player,
     if max_depth == 0:
         return
 
-    # build children and sum wins of children
+    # build and add children
     for board_variation in gen_play_permutations(parent_node.board_array,
                                                  player_turn):
-        # build children
         child = Node(parent_node, board_variation)
         parent_node.add_child(child)
 

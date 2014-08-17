@@ -164,8 +164,8 @@ def check_list_for_almost_n_in_a_row(values_sequence, n_in_a_row):
     return None, None
 
 
-def make_list(board_array, starting_i, starting_j, delta_i, delta_j,
-              max_length):
+def get_part_of_board(board_array, starting_i, starting_j, delta_i, delta_j,
+                      max_length):
     '''given a board_array, a position on that board array, a direction to
     travel from that position, and a number of values to try for: make a list
     of that size, by moving in that direction over the board
@@ -308,8 +308,8 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
         delta_i = 1
         delta_j = 1
         while i + n_in_a_row - 1 < length and j + n_in_a_row - 1 < length:
-            sub_list = make_list(board_array, i, j, delta_i, delta_j,
-                                 n_in_a_row)
+            sub_list = get_part_of_board(board_array, i, j, delta_i, delta_j,
+                                           n_in_a_row)
             player, offset = check_list_for_almost_n_in_a_row(sub_list,
                                                               n_in_a_row)
             if player is not None:
@@ -330,8 +330,8 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
         delta_i = 1
         delta_j = -1
         while i < length and j >= 0:
-            sub_list = make_list(board_array, i, j, delta_i, delta_j,
-                                 n_in_a_row)
+            sub_list = get_part_of_board(board_array, i, j, delta_i, delta_j,
+                                           n_in_a_row)
             player, offset = check_list_for_almost_n_in_a_row(sub_list,
                                                               n_in_a_row)
             if player is not None:

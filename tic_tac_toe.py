@@ -19,7 +19,7 @@ def check_board_horizontally_full(board_matrix):
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_matrix: an nxn array carrying the current board state --
+    -- board_matrix: an nxn matrix carrying the current board state --
     guaranteed by check_board function'''
     # check horizontal rows
     ret = 0
@@ -37,7 +37,7 @@ def check_board_vertically_full(board_matrix):
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_matrix: an nxn array carrying the current board state --
+    -- board_matrix: an nxn matrix carrying the current board state --
     guaranteed by check_board function'''
     # check vertical rows
     ret = 0
@@ -58,7 +58,7 @@ def check_board_diagonally_full(board_matrix):
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_matrix: an nxn array carrying the current board state --
+    -- board_matrix: an nxn matrix carrying the current board state --
     guaranteed by check_board function
     -- n_in_a_row: how many items in a row constitutes a win'''
     ret = Player.nobody.value
@@ -97,7 +97,7 @@ def check_board_diagonally_full(board_matrix):
 def check_board_full_n_in_a_row(board_matrix):
     '''Check a nxn tictactoe board for n in a row
 
-    -- board_matrix:  a nxn array representing a tic tac to board,  it
+    -- board_matrix:  a nxn matrix representing a tic tac to board,  it
                      is assumed that 0 spaces are unocupied,  and numbered
                      spaces are occupied by a player represented by that number
 
@@ -105,10 +105,10 @@ def check_board_full_n_in_a_row(board_matrix):
 
     Returns: 0 if no three_in_a_row found,  otherwise the number of the player
              with the (first) three_in_a_row found'''
-    num_subarrays = len(board_matrix)
+    num_sublists = len(board_matrix)
     for horizontal_row in board_matrix:
-        num_items_in_subarray = len(horizontal_row)
-        assert num_subarrays == num_items_in_subarray, "Array is not nxn"
+        num_items_in_sublists = len(horizontal_row)
+        assert num_sublists == num_items_in_sublists, "matrix is not nxn"
 
     ret = Player.nobody.value
     if ret == Player.nobody.value:
@@ -166,12 +166,12 @@ def check_list_for_almost_n_in_a_row(values_sequence, n_in_a_row):
 
 def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
                       max_length):
-    '''given a board_matrix, a position on that board array, a
+    '''given a board_matrix, a position on that board matrix, a
     direction/velocity to travel from that position, and a number of values to
     try for: make a list of up to that size, by moving in that direction over
     the board, recording found values
 
-    -- board_matrix: an nxn array carrying the current board state
+    -- board_matrix: an nxn matrix carrying the current board state
     -- starting_i: starting row position on the board
     -- starting_j: starting column position on the board
     -- delta_i: rate and direction that we move over rows in the board
@@ -179,7 +179,7 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
     -- max_length: max length of the list that we make'''
 
     new_list = []
-    # get parameters needed to move over array and record values
+    # get parameters needed to move over matrix and record values
     possible_i_movement = abs((max_length-1) * delta_i)
     possible_j_movement = abs((max_length-1) * delta_j)
     i_max = min(len(board_matrix) - 1, starting_i + possible_i_movement)
@@ -187,7 +187,7 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
     i_min = max(0, starting_i - possible_i_movement)
     j_min = max(0, starting_j - possible_j_movement)
 
-    # move over the array, recording the values found
+    # move over the matrix, recording the values found
     i = starting_i
     j = starting_j
     while i_min <= i <= i_max and j_min <= j <= j_max:
@@ -197,16 +197,16 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
     return new_list
 
 
-def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
+def note_potential_n_in_a_row(n_in_a_row_position_matrix, player, i, j):
     '''Call this function if a potential n_in_a_row is found (n-1 squares lined
     up horizontally, vertically, or diagonally, with the final square empty).
     It notes the location of the n_in_a_row, and the player who can
-    make an n_in_a_row there in a provided n_in_a_row_position_array. If
+    make an n_in_a_row there in a provided n_in_a_row_position_matrix. If
     another n_in_a_row has been found already in the same position, this
-    function will update the state of n_in_a_row_position_array to record that
+    function will update the state of n_in_a_row_position_matrix to record that
     both players can make an n_in_a_row by playing there
 
-    -- n_in_a_row_position_array: a board_matrix sized array used for noting
+    -- n_in_a_row_position_matrix: a board_matrix sized matrix used for noting
        where n_in_a_row's could potentially be produced next turn, and who they
        could be produced by
 
@@ -215,40 +215,40 @@ def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
     -- j: column at which n_in_a_row could be produced'''
 
     assert player == Player(player).value,\
-        "Unrecognized player given to n_in_a_row_position_array"
+        "Unrecognized player given to n_in_a_row_position_matrix"
     assert player != Player.nobody.value, \
         "Noting that nobody is making a potential n_in_a_row is useless"
 
-    current = n_in_a_row_position_array[i][j]
+    current = n_in_a_row_position_matrix[i][j]
     currently_nobody_wins_at_this_position = (current == Player.nobody.value)
     currently_player1_wins_at_this_position = (current == Player.player1.value)
     currently_player2_wins_at_this_position = (current == Player.player2.value)
     a_new_player_wins_at_this_position = (current != player)
 
     if currently_nobody_wins_at_this_position:
-        n_in_a_row_position_array[i][j] = player
+        n_in_a_row_position_matrix[i][j] = player
     elif (currently_player1_wins_at_this_position or
             currently_player2_wins_at_this_position):
         if a_new_player_wins_at_this_position:
-            n_in_a_row_position_array[i][j] = Player.both.value
+            n_in_a_row_position_matrix[i][j] = Player.both.value
     return
 
 
-def check_diagonals_partially(board_matrix, n_in_a_row_position_array,
+def check_diagonals_partially(board_matrix, n_in_a_row_position_matrix,
                               n_in_a_row):
-    '''for an nxn array, look through the diagonal positions for almost
+    '''for an nxn matrix, look through the diagonal positions for almost
     n_in_a_row's (n spaces lined up, where n-1 of them have been played on by
     the same player, and the last one is empty. In other words, a situation
     where a player could potentially win on their next). Then note these
     positions, and the potentally winnning player, down on the
-    given n_in_a_row_position_array.
+    given n_in_a_row_position_matrix.
 
-    -- board_matrix: an nxn array (list of lists)
-    -- n_in_a_row_position_array: another nxn array, used for recording the
+    -- board_matrix: an nxn matrix (list of lists)
+    -- n_in_a_row_position_matrix: another nxn matrix, used for recording the
        locations of any potential n_in_a_row's.
     -- n_in_a_row: What length constitutes an n_in_a_row
 
-    Returns: reference to the n_in_a_row_position_array provided'''
+    Returns: reference to the n_in_a_row_position_matrix provided'''
 
     # a diagram of a tic tac toe board is most helpful for understanding the
     # diagonal traversing part of this function (by far the most complex part).
@@ -336,7 +336,7 @@ def check_diagonals_partially(board_matrix, n_in_a_row_position_array,
             if player is not None:
                 offset_i = i + (offset * delta_i)
                 offset_j = j + (offset * delta_j)
-                note_potential_n_in_a_row(n_in_a_row_position_array, player,
+                note_potential_n_in_a_row(n_in_a_row_position_matrix, player,
                                           offset_i, offset_j)
             i += delta_i
             j += delta_j
@@ -357,18 +357,18 @@ def check_diagonals_partially(board_matrix, n_in_a_row_position_array,
             if player is not None:
                 offset_i = i + (offset * delta_i)
                 offset_j = j + (offset * delta_j)
-                note_potential_n_in_a_row(n_in_a_row_position_array, player,
+                note_potential_n_in_a_row(n_in_a_row_position_matrix, player,
                                           offset_i, offset_j)
             i += delta_i
             j += delta_j
 
-    return n_in_a_row_position_array
+    return n_in_a_row_position_matrix
 
 
 def count_value(board_matrix, value):
-    '''Counts number of zeros in an nxn array
+    '''Counts number of zeros in an nxn matrix
 
-    -- board_matrix: an nxn array
+    -- board_matrix: an nxn matrix
     -- value: value to count'''
     value_count = 0
     for row in board_matrix:
@@ -416,7 +416,7 @@ def copy_list_of_lists(board_matrix):
     that list and return the copy. Useful for avoiding python pass-by-reference
     issues
 
-    -- board_matrix: an nxn array holding the current state of play'''
+    -- board_matrix: an nxn matrix holding the current state of play'''
     new_board_matrix = []
     for row in board_matrix:
         new_row = list(row)
@@ -427,7 +427,7 @@ def copy_list_of_lists(board_matrix):
 def gen_play_permutations(board_matrix, players_turn):
     '''Gens each possible move left in the board for a given player
 
-    -- board_matrix: an nxn array holding the current state of play
+    -- board_matrix: an nxn matrix holding the current state of play
     -- players_turn: indicates which players turn it is to play'''
     for i, row in enumerate(board_matrix):
         for j, square in enumerate(row):
@@ -549,12 +549,12 @@ def build_new_board_matrix(dimensions):
     initialize to all 0's
 
     -- dimensions: the size of n for our nxn board_matrix'''
-    sub_array = []
+    sub_list = []
     board_matrix = []
     for i in range(dimensions):
-        sub_array.append(0)
+        sub_list.append(0)
     for j in range(dimensions):
-        board_matrix.append(sub_array)
+        board_matrix.append(sub_list)
     return board_matrix
 
 

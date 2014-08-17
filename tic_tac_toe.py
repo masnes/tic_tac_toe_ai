@@ -343,16 +343,16 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     return (down_right_diagonals, down_left_diagonals)
 
 
-# Note: this function is not currently in use, but is very useful for debugging
-def count_zeros(board_array):
+def count_value(board_array, value):
     '''Counts number of zeros in an nxn array
 
-    -- board_array: an nxn array'''
-    zero_count = 0
+    -- board_array: an nxn array
+    -- value: value to count'''
+    value_count = 0
     for row in board_array:
         for item in row:
-            zero_count += (item == 0)
-    return zero_count
+            value_count += (item == value)
+    return value_count
 
 
 def swap_players(player):

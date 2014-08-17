@@ -14,16 +14,16 @@ class Player(Enum):
     both = 3
 
 
-def check_board_horizontally_full(board_array):
+def check_board_horizontally_full(board_matrix):
     '''check the horizontal rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_array: an nxn array carrying the current board state -- guaranteed
-    by check_board function'''
+    -- board_matrix: an nxn array carrying the current board state --
+    guaranteed by check_board function'''
     # check horizontal rows
     ret = 0
-    for horizontal_row in board_array:
+    for horizontal_row in board_matrix:
         items = set(horizontal_row)
         if len(items) == 1:
             ret = items.pop()
@@ -32,18 +32,18 @@ def check_board_horizontally_full(board_array):
     return ret
 
 
-def check_board_vertically_full(board_array):
+def check_board_vertically_full(board_matrix):
     '''check the vertical rows of a nxn gameboard, returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_array: an nxn array carrying the current board state -- guaranteed
-    by check_board function'''
+    -- board_matrix: an nxn array carrying the current board state --
+    guaranteed by check_board function'''
     # check vertical rows
     ret = 0
     # note that vertical_row is a tuple, while in check_board_horizontally
     # it's a list. This doesn't affect the (current) implemenation
-    for vertical_row in zip(*board_array):
+    for vertical_row in zip(*board_matrix):
         items = set(vertical_row)
         if len(items) == 1:
             ret = items.pop()
@@ -53,32 +53,32 @@ def check_board_vertically_full(board_array):
 
 
 # DONE: check boards in true n_in_a_row style
-def check_board_diagonally_full(board_array):
+def check_board_diagonally_full(board_matrix):
     '''check the diagonal cross section of a nxn gameboard,  returning 0 if no
     n-in-a-row is found, and the player number who has the first n-in-a-row
     otherwise
 
-    -- board_array: an nxn array carrying the current board state -- guaranteed
-    by check_board function
+    -- board_matrix: an nxn array carrying the current board state --
+    guaranteed by check_board function
     -- n_in_a_row: how many items in a row constitutes a win'''
     ret = Player.nobody.value
-    length = len(board_array[0])
+    length = len(board_matrix[0])
 
-    down_right_diagonal_contains_a_player = (board_array[0][0] !=
+    down_right_diagonal_contains_a_player = (board_matrix[0][0] !=
                                              Player.nobody.value)
-    up_right_diagonal_contains_a_player = (board_array[0][length-1] !=
+    up_right_diagonal_contains_a_player = (board_matrix[0][length-1] !=
                                            Player.nobody.value)
 
     # check for n_in_a_row in down right diagonal
     if down_right_diagonal_contains_a_player:
-        down_right_diagonal_set = {board_array[i][i] for i in range(0, length)}
+        down_right_diagonal_set = {board_matrix[i][i] for i in range(length)}
         down_right_diagonal_is_n_in_a_row = (len(down_right_diagonal_set) == 1)
     else:
         down_right_diagonal_is_n_in_a_row = False
     # check for n_in_a_row in up right diagonal
     if up_right_diagonal_contains_a_player:
         up_right_diagonal_set = \
-            {board_array[i][length-i-1] for i in range(0, length)}
+            {board_matrix[i][length-i-1] for i in range(0, length)}
         up_right_diagonal_is_n_in_a_row = (len(up_right_diagonal_set) == 1)
     else:
         up_right_diagonal_is_n_in_a_row = False
@@ -94,10 +94,10 @@ def check_board_diagonally_full(board_array):
     return ret
 
 
-def check_board_full_n_in_a_row(board_array):
+def check_board_full_n_in_a_row(board_matrix):
     '''Check a nxn tictactoe board for n in a row
 
-    -- board_array:  a nxn array representing a tic tac to board,  it
+    -- board_matrix:  a nxn array representing a tic tac to board,  it
                      is assumed that 0 spaces are unocupied,  and numbered
                      spaces are occupied by a player represented by that number
 
@@ -105,18 +105,18 @@ def check_board_full_n_in_a_row(board_array):
 
     Returns: 0 if no three_in_a_row found,  otherwise the number of the player
              with the (first) three_in_a_row found'''
-    num_subarrays = len(board_array)
-    for horizontal_row in board_array:
+    num_subarrays = len(board_matrix)
+    for horizontal_row in board_matrix:
         num_items_in_subarray = len(horizontal_row)
         assert num_subarrays == num_items_in_subarray, "Array is not nxn"
 
     ret = Player.nobody.value
     if ret == Player.nobody.value:
-        ret = check_board_horizontally_full(board_array)
+        ret = check_board_horizontally_full(board_matrix)
     if ret == Player.nobody.value:
-        ret = check_board_diagonally_full(board_array)
+        ret = check_board_diagonally_full(board_matrix)
     if ret == Player.nobody.value:
-        ret = check_board_vertically_full(board_array)
+        ret = check_board_vertically_full(board_matrix)
     return ret
 
 
@@ -164,14 +164,14 @@ def check_list_for_almost_n_in_a_row(values_sequence, n_in_a_row):
     return None, None
 
 
-def get_part_of_board(board_array, starting_i, starting_j, delta_i, delta_j,
+def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
                       max_length):
-    '''given a board_array, a position on that board array, a
+    '''given a board_matrix, a position on that board array, a
     direction/velocity to travel from that position, and a number of values to
     try for: make a list of up to that size, by moving in that direction over
     the board, recording found values
 
-    -- board_array: an nxn array carrying the current board state
+    -- board_matrix: an nxn array carrying the current board state
     -- starting_i: starting row position on the board
     -- starting_j: starting column position on the board
     -- delta_i: rate and direction that we move over rows in the board
@@ -182,8 +182,8 @@ def get_part_of_board(board_array, starting_i, starting_j, delta_i, delta_j,
     # get parameters needed to move over array and record values
     possible_i_movement = abs((max_length-1) * delta_i)
     possible_j_movement = abs((max_length-1) * delta_j)
-    i_max = min(len(board_array) - 1, starting_i + possible_i_movement)
-    j_max = min(len(board_array) - 1, starting_j + possible_j_movement)
+    i_max = min(len(board_matrix) - 1, starting_i + possible_i_movement)
+    j_max = min(len(board_matrix) - 1, starting_j + possible_j_movement)
     i_min = max(0, starting_i - possible_i_movement)
     j_min = max(0, starting_j - possible_j_movement)
 
@@ -191,7 +191,7 @@ def get_part_of_board(board_array, starting_i, starting_j, delta_i, delta_j,
     i = starting_i
     j = starting_j
     while i_min <= i <= i_max and j_min <= j <= j_max:
-        new_list.append(board_array[i][j])
+        new_list.append(board_matrix[i][j])
         i += delta_i
         j += delta_j
     return new_list
@@ -206,7 +206,7 @@ def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
     function will update the state of n_in_a_row_position_array to record that
     both players can make an n_in_a_row by playing there
 
-    -- n_in_a_row_position_array: a board_array sized array used for noting
+    -- n_in_a_row_position_array: a board_matrix sized array used for noting
        where n_in_a_row's could potentially be produced next turn, and who they
        could be produced by
 
@@ -234,7 +234,7 @@ def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
     return
 
 
-def check_diagonals_partially(board_array, n_in_a_row_position_array,
+def check_diagonals_partially(board_matrix, n_in_a_row_position_array,
                               n_in_a_row):
     '''for an nxn array, look through the diagonal positions for almost
     n_in_a_row's (n spaces lined up, where n-1 of them have been played on by
@@ -243,7 +243,7 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     positions, and the potentally winnning player, down on the
     given n_in_a_row_position_array.
 
-    -- board_array: an nxn array (list of lists)
+    -- board_matrix: an nxn array (list of lists)
     -- n_in_a_row_position_array: another nxn array, used for recording the
        locations of any potential n_in_a_row's.
     -- n_in_a_row: What length constitutes an n_in_a_row
@@ -317,7 +317,7 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     #  3   |  |  |c
     # (i)
 
-    length = len(board_array)
+    length = len(board_matrix)
     num_diagonals_per_direction = (length*2)-1  # our (l*2)-1 diagonals
 
     # look at down right diagonals
@@ -329,8 +329,8 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
         delta_i = 1
         delta_j = 1
         while i + n_in_a_row - 1 < length and j + n_in_a_row - 1 < length:
-            board_part = get_part_of_board(board_array, i, j, delta_i, delta_j,
-                                           n_in_a_row)
+            board_part = get_part_of_board(board_matrix, i, j,
+                                           delta_i, delta_j, n_in_a_row)
             player, offset = check_list_for_almost_n_in_a_row(board_part,
                                                               n_in_a_row)
             if player is not None:
@@ -350,8 +350,8 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
         delta_i = 1
         delta_j = -1
         while i < length and j >= 0:
-            board_part = get_part_of_board(board_array, i, j, delta_i, delta_j,
-                                           n_in_a_row)
+            board_part = get_part_of_board(board_matrix, i, j,
+                                           delta_i, delta_j, n_in_a_row)
             player, offset = check_list_for_almost_n_in_a_row(board_part,
                                                               n_in_a_row)
             if player is not None:
@@ -365,13 +365,13 @@ def check_diagonals_partially(board_array, n_in_a_row_position_array,
     return n_in_a_row_position_array
 
 
-def count_value(board_array, value):
+def count_value(board_matrix, value):
     '''Counts number of zeros in an nxn array
 
-    -- board_array: an nxn array
+    -- board_matrix: an nxn array
     -- value: value to count'''
     value_count = 0
-    for row in board_array:
+    for row in board_matrix:
         for item in row:
             value_count += (item == value)
     return value_count
@@ -411,30 +411,30 @@ class WhosTurnGenerator():
         return self.current_player
 
 
-def copy_list_of_lists(board_array):
-    '''Given a list of lists (a board_array), produce a copy of all items within
+def copy_list_of_lists(board_matrix):
+    '''Given a list of lists (a board_matrix), produce a copy of all items within
     that list and return the copy. Useful for avoiding python pass-by-reference
     issues
 
-    -- board_array: an nxn array holding the current state of play'''
-    new_board_array = []
-    for row in board_array:
+    -- board_matrix: an nxn array holding the current state of play'''
+    new_board_matrix = []
+    for row in board_matrix:
         new_row = list(row)
-        new_board_array.append(new_row)
-    return new_board_array
+        new_board_matrix.append(new_row)
+    return new_board_matrix
 
 
-def gen_play_permutations(board_array, players_turn):
+def gen_play_permutations(board_matrix, players_turn):
     '''Gens each possible move left in the board for a given player
 
-    -- board_array: an nxn array holding the current state of play
+    -- board_matrix: an nxn array holding the current state of play
     -- players_turn: indicates which players turn it is to play'''
-    for i, row in enumerate(board_array):
+    for i, row in enumerate(board_matrix):
         for j, square in enumerate(row):
             if square == Player.nobody.value:
-                new_board_array = copy_list_of_lists(board_array)
-                new_board_array[i][j] = players_turn
-                yield new_board_array
+                new_board_matrix = copy_list_of_lists(board_matrix)
+                new_board_matrix[i][j] = players_turn
+                yield new_board_matrix
     raise StopIteration
 
 
@@ -442,43 +442,43 @@ class Node:
     '''A node in our list-tree. The node stores information on what its parent
     is, what its children are, whether it's a winner, and how many winning
     children it has (0 initially, since it starts with no children)'''
-    def __init__(self, parent, board_array, computer_value=1):
+    def __init__(self, parent, board_matrix, computer_value=1):
         '''initialize a node in the list tree
 
         -- parent: parent node, if any
-        -- board_array: a nxn 2d list with the tic-tac-toe state for this node
+        -- board_matrix: a nxn 2d list with the tic-tac-toe state for this node
         -- computer_value: the value that represents the computer on
-        board_array, defaults to 1'''
+        board_matrix, defaults to 1'''
         self.child_computer_wins = 0
         self.child_human_wins = 0
-        self.winner = check_board_full_n_in_a_row(board_array)
+        self.winner = check_board_full_n_in_a_row(board_matrix)
         self.parent = parent
 
         self.children = []
-        self.board_array = board_array
+        self.board_matrix = board_matrix
 
     def add_child(self, child):
         self.children.append(child)
         child.parent = self
 
-    def has_child(self, board_array):
+    def has_child(self, board_matrix):
         for child in self.children:
-            if child.board_array == board_array:
+            if child.board_matrix == board_matrix:
                 return child
         return None
 
 
-def add_node_to_tree(board_array, parent_node):
+def add_node_to_tree(board_matrix, parent_node):
     '''Adds a node to the current tree. If the parent_node is not there, adds a
     parent node. Otherwise adds the node as a child of the parent node
 
-    -- board_array: the nxn board state for the node to be added
+    -- board_matrix: the nxn board state for the node to be added
     -- parent_node: the nodes parent, if any'''
     if parent_node is None:
-        parent_node = Node(None, board_array)
+        parent_node = Node(None, board_matrix)
         new_child = parent_node
     else:
-        child_node = Node(parent_node, board_array)
+        child_node = Node(parent_node, board_matrix)
         parent_node.add_child(child_node)
         new_child = child_node
     return new_child
@@ -521,7 +521,7 @@ def add_nodes_recursively(parent_node, player_turn, computer_player,
         return
 
     # build and add children
-    for board_variation in gen_play_permutations(parent_node.board_array,
+    for board_variation in gen_play_permutations(parent_node.board_matrix,
                                                  player_turn):
         child = Node(parent_node, board_variation)
         parent_node.add_child(child)
@@ -544,18 +544,18 @@ def add_nodes_recursively(parent_node, player_turn, computer_player,
             parent_node.child_human_wins += 1
 
 
-def build_new_board_array(dimensions):
-    '''Builds a board_array (list of lists of ints) of dimensions nxn,
+def build_new_board_matrix(dimensions):
+    '''Builds a board_matrix (list of lists of ints) of dimensions nxn,
     initialize to all 0's
 
-    -- dimensions: the size of n for our nxn board_array'''
+    -- dimensions: the size of n for our nxn board_matrix'''
     sub_array = []
-    board_array = []
+    board_matrix = []
     for i in range(dimensions):
         sub_array.append(0)
     for j in range(dimensions):
-        board_array.append(sub_array)
-    return board_array
+        board_matrix.append(sub_array)
+    return board_matrix
 
 
 def build_decision_tree(computer_goes_first=True, board_dimensions=3,
@@ -570,14 +570,14 @@ def build_decision_tree(computer_goes_first=True, board_dimensions=3,
     tree.
 
     Returns: root node of tree'''
-    board_array = build_new_board_array(board_dimensions)
+    board_matrix = build_new_board_matrix(board_dimensions)
 
     if computer_goes_first:
         computer_player = Player.player1.value
     else:
         computer_player = Player.player2.value
 
-    root = Node(None, board_array, computer_player)
+    root = Node(None, board_matrix, computer_player)
     starting_player = Player.player1.value
     add_nodes_recursively(root, starting_player, computer_player, max_depth)
 
@@ -635,6 +635,6 @@ if __name__ == '__main__':
     cProfile.run('root = build_decision_tree(True, 3, None)')
     # for child in root.children:
     #     print("board: {0}, computer wins: {1}, player wins: {2}"
-    #           .format(child.board_array, child.child_computer_wins,
+    #           .format(child.board_matrix, child.child_computer_wins,
     #                   child.child_human_wins))
     # print_tree_structure(root)

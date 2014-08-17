@@ -226,8 +226,8 @@ def note_potential_n_in_a_row(n_in_a_row_position_array, player, i, j):
 
     if currently_nobody_wins_at_this_position:
         n_in_a_row_position_array[i][j] = player
-    elif currently_player1_wins_at_this_position or \
-            currently_player2_wins_at_this_position:
+    elif (currently_player1_wins_at_this_position or
+            currently_player2_wins_at_this_position):
         if a_new_player_wins_at_this_position:
             n_in_a_row_position_array[i][j] = Player.both.value
     return

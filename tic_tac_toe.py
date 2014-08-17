@@ -166,9 +166,10 @@ def check_list_for_almost_n_in_a_row(values_sequence, n_in_a_row):
 
 def get_part_of_board(board_array, starting_i, starting_j, delta_i, delta_j,
                       max_length):
-    '''given a board_array, a position on that board array, a direction to
-    travel from that position, and a number of values to try for: make a list
-    of that size, by moving in that direction over the board
+    '''given a board_array, a position on that board array, a
+    direction/velocity to travel from that position, and a number of values to
+    try for: make a list of up to that size, by moving in that direction over
+    the board, recording found values
 
     -- board_array: an nxn array carrying the current board state
     -- starting_i: starting row position on the board

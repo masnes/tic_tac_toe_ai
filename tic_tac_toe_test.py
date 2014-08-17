@@ -276,35 +276,49 @@ def debug_check_board_full_n_in_a_row():
     return
 
 
-# format: board_array, expected_num_zeros
-count_zeros_variations = (([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 9),
-                          ([[1, 1, 1], [1, 1, 1], [1, 1, 1]], 0),
-                          ([[2, 2, 2], [2, 2, 2], [2, 2, 2]], 0),
-                          ([[0, 0, 0], [1, 1, 1], [1, 1, 1]], 3),
-                          ([[1, 1, 1], [0, 0, 0], [1, 1, 1]], 3),
-                          ([[1, 1, 1], [1, 1, 1], [0, 0, 0]], 3),
-                          ([[1, 1, 0], [1, 1, 0], [1, 1, 0]], 3),
-                          ([[1, 0, 1], [1, 0, 1], [1, 0, 1]], 3),
-                          ([[0, 1, 1], [1, 1, 1], [1, 1, 1]], 1),
-                          ([[0, 0, 1], [1, 1, 1], [1, 1, 1]], 2),
-                          ([[0, 0, 0], [1, 1, 1], [1, 1, 1]], 3),
-                          ([[0, 0, 0], [0, 1, 1], [1, 1, 1]], 4),
-                          ([[0, 0, 0], [0, 0, 1], [1, 1, 1]], 5),
-                          ([[0, 0, 0], [0, 0, 0], [1, 1, 1]], 6),
-                          ([[0, 0, 0], [0, 0, 0], [0, 1, 1]], 7),
-                          ([[0, 0, 0], [0, 0, 0], [0, 0, 1]], 8),
-                          ([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 9))
+# format: board_array, expected_num_zeros, expected number of 1's, expected
+# number of 2's
+#                                         board                0  1  2's
+count_values_variations = (([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 9, 0, 0),
+                           ([[1, 1, 1], [1, 1, 1], [1, 1, 1]], 0, 9, 0),
+                           ([[2, 2, 2], [2, 2, 2], [2, 2, 2]], 0, 0, 9),
+                           ([[0, 0, 0], [1, 1, 1], [1, 1, 1]], 3, 6, 0),
+                           ([[1, 1, 1], [0, 0, 0], [1, 1, 1]], 3, 6, 0),
+                           ([[1, 1, 1], [1, 1, 1], [0, 0, 0]], 3, 6, 0),
+                           ([[1, 1, 0], [1, 1, 0], [1, 1, 0]], 3, 6, 0),
+                           ([[1, 0, 1], [1, 0, 1], [1, 0, 1]], 3, 6, 0),
+                           ([[0, 1, 1], [1, 1, 1], [1, 1, 1]], 1, 8, 0),
+                           ([[0, 0, 1], [1, 1, 1], [1, 1, 1]], 2, 7, 0),
+                           ([[0, 0, 0], [1, 1, 1], [1, 1, 1]], 3, 6, 0),
+                           ([[0, 0, 0], [0, 1, 1], [1, 1, 1]], 4, 5, 0),
+                           ([[0, 0, 0], [0, 0, 1], [1, 1, 1]], 5, 4, 0),
+                           ([[0, 0, 0], [0, 0, 0], [1, 1, 1]], 6, 3, 0),
+                           ([[0, 0, 0], [0, 0, 0], [0, 1, 1]], 7, 2, 0),
+                           ([[0, 0, 0], [0, 0, 0], [0, 0, 1]], 8, 1, 0),
+                           ([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 9, 0, 0))
 
 
-def debug_count_zeros():
-    for info in count_zeros_variations:
+def debug_count_values():
+    for info in count_values_variations:
         board_array = info[0]
         expected_num_zeros = info[1]
-        zeros_counted = tic_tac_toe.count_zeros(board_array)
+        expected_num_ones = info[2]
+        expected_num_twos = info[3]
+        zeros_counted = tic_tac_toe.count_value(board_array, 0)
+        ones_counted = tic_tac_toe.count_value(board_array, 1)
+        twos_counted = tic_tac_toe.count_value(board_array, 2)
         if zeros_counted is not expected_num_zeros:
-            print("count_zeros: board - {0}, zero count: {1} "
+            print("count_value: board - {0}, zero count: {1} "
                   "expected zero count: {2}".format(board_array, zeros_counted,
                                                     expected_num_zeros))
+        if ones_counted is not expected_num_ones:
+            print("count_value: board - {0}, one count: {1} "
+                  "expected one count: {2}".format(board_array, ones_counted,
+                                                   expected_num_ones))
+        if twos_counted is not expected_num_twos:
+            print("count_value: board - {0}, two count: {1} "
+                  "expected two count: {2}".format(board_array, twos_counted,
+                                                   expected_num_twos))
 
 
 def check_for_assertion_error(function, values_to_pass):
@@ -425,6 +439,6 @@ def debug_get_diagonals():
 if __name__ == "__main__":
     debug_node()
     debug_check_board_full_n_in_a_row()
-    debug_count_zeros()
+    debug_count_values()
     debug_swap_players()
     debug_WhosTurnGenerator()

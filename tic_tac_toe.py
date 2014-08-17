@@ -61,17 +61,36 @@ def check_board_diagonally_full(board_array):
     -- board_array: an nxn array carrying the current board state -- guaranteed
     by check_board function
     -- n_in_a_row: how many items in a row constitutes a win'''
-    ret = 0
-    # if there's no center, there's no diagonals
-    if board_array[1][1] != Player.nobody.value:
-        l = len(board_array[0])
-        down_right_diagonal = {board_array[i][i] for i in range(0, l)}
-        up_right_diagonal = {board_array[i][l-i-1] for i in range(0, l)}
-        if len(down_right_diagonal) == 1:
-            ret = down_right_diagonal.pop()
-        # this part breaks if the "if board_array[1][1]" part is removed
-        elif len(up_right_diagonal) == 1:
-            ret = up_right_diagonal.pop()
+    ret = Player.nobody.value
+    length = len(board_array[0])
+
+    down_right_diagonal_contains_a_player = (board_array[0][0] !=
+                                             Player.nobody.value)
+    up_right_diagonal_contains_a_player = (board_array[0][length-1] !=
+                                           Player.nobody.value)
+
+    # check for n_in_a_row in down right diagonal
+    if down_right_diagonal_contains_a_player:
+        down_right_diagonal_set = {board_array[i][i] for i in range(0, length)}
+        down_right_diagonal_is_n_in_a_row = (len(down_right_diagonal_set) == 1)
+    else:
+        down_right_diagonal_is_n_in_a_row = False
+    # check for n_in_a_row in up right diagonal
+    if up_right_diagonal_contains_a_player:
+        up_right_diagonal_set = \
+            {board_array[i][length-i-1] for i in range(0, length)}
+        up_right_diagonal_is_n_in_a_row = (len(up_right_diagonal_set) == 1)
+    else:
+        up_right_diagonal_is_n_in_a_row = False
+
+    # note an n_in_a_row, and the identity of winning player if found
+    # warning: in any (unexpected) cases where both players make an n_in_a_row,
+    # only one player's n_in_a_row will be detected
+    if down_right_diagonal_is_n_in_a_row:
+        ret = down_right_diagonal_set.pop()
+    elif up_right_diagonal_is_n_in_a_row:
+        ret = up_right_diagonal_set.pop()
+
     return ret
 
 

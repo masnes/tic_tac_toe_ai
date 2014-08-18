@@ -472,9 +472,12 @@ def debug_check_list_for_almost_n_in_a_row():
 
 
 if __name__ == "__main__":
+    print("starting tests")
     debug_node()
     debug_check_board_full_n_in_a_row()
     debug_count_values()
     debug_swap_players()
     debug_WhosTurnGenerator()
     debug_check_list_for_almost_n_in_a_row()
+    print("all tests finished. If there is no other output here, "
+          "everything passed!")

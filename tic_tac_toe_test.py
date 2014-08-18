@@ -437,9 +437,52 @@ def debug_get_diagonals():
                                          results_tuples[i]))
 
 
+def debug_check_list_for_almost_n_in_a_row():
+    #          list  n     position
+    values = (([1], (None, None)),
+              ([1], (None, None)),
+              ([1], (None, None)),
+              ([0, 0], (None, None)),
+              ([1, 0], (1, 1)),
+              ([1, 1], (None, None)),
+              ([2, 0], (2, 1)),
+              ([2, 2], (None, None)),
+              ([1, 2], (None, None)),
+              ([2, 1], (None, None)),
+              ([0, 0, 0], (None, None)),
+              ([1, 0, 1], (1, 1)),
+              ([1, 1, 0], (1, 2)),
+              ([1, 1, 1], (None, None)),
+              ([0, 2, 2], (2, 0)),
+              ([2, 2, 0], (2, 2)),
+              ([2, 2, 2], (None, None)),
+              ([1, 2, 1], (None, None)),
+              ([2, 1, 2], (None, None)),
+              ([1, 1, 0, 0], (None, None)),
+              ([1, 1, 1, 0], (1, 3)),
+              ([1, 1, 1, 1], (None, None)),
+              ([2, 2, 0, 0], (None, None)),
+              ([2, 2, 0, 2], (2, 2)),
+              ([2, 2, 2, 2], (None, None)))
+    for value_set in values:
+        board_list = value_set[0]
+        expected_n = value_set[1][0]
+        expected_location = value_set[1][1]
+        (actual_n, actual_location) = \
+            tic_tac_toe.check_list_for_almost_n_in_a_row(board_list,
+                                                         len(board_list))
+        if (actual_n, actual_location) != (expected_n, expected_location):
+            print("debug_check_list_for_almost_n_in_a_row: \n"
+                  "list: {0}, value expected: {1}, got: {2}\n"
+                  "list: {3}, position expected: {4}, got: {5}\n"
+                  .format(board_list, expected_n, actual_n,
+                          board_list, expected_location, actual_location))
+
+
 if __name__ == "__main__":
     debug_node()
     debug_check_board_full_n_in_a_row()
     debug_count_values()
     debug_swap_players()
     debug_WhosTurnGenerator()
+    debug_check_list_for_almost_n_in_a_row()

@@ -4,7 +4,6 @@ import itertools
 
 def debug_node():
     board_matrix = [[0 for x in range(3)] for x in range(3)]
-    print(board_matrix)
     parent = tic_tac_toe.Node(None, board_matrix, 1)
     children_arrays = []
     for i in range(3):
@@ -15,13 +14,6 @@ def debug_node():
     for child_array in children_arrays:
         child_node = tic_tac_toe.Node(parent, child_array, 1)
         parent.add_child(child_node)
-
-    print(parent.children)
-    for child in parent.children:
-        print(child.board_matrix)
-        print(child.winner)
-    print(parent.board_matrix)
-    print(parent.winner)
 
 
 # format: board, check, horizontal_check, vertical_check, diagonal_check

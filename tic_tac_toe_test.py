@@ -3,9 +3,9 @@ import itertools
 
 
 def debug_node():
-    board_array = [[0 for x in range(3)] for x in range(3)]
-    print(board_array)
-    parent = tic_tac_toe.Node(None, board_array, 1)
+    board_matrix = [[0 for x in range(3)] for x in range(3)]
+    print(board_matrix)
+    parent = tic_tac_toe.Node(None, board_matrix, 1)
     children_arrays = []
     for i in range(3):
         for j in range(3):
@@ -18,9 +18,9 @@ def debug_node():
 
     print(parent.children)
     for child in parent.children:
-        print(child.board_array)
+        print(child.board_matrix)
         print(child.winner)
-    print(parent.board_array)
+    print(parent.board_matrix)
     print(parent.winner)
 
 
@@ -276,7 +276,7 @@ def debug_check_board_full_n_in_a_row():
     return
 
 
-# format: board_array, expected_num_zeros, expected number of 1's, expected
+# format: board_matrix, expected_num_zeros, expected number of 1's, expected
 # number of 2's
 #                                         board                0  1  2's
 count_values_variations = (([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 9, 0, 0),
@@ -300,24 +300,25 @@ count_values_variations = (([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 9, 0, 0),
 
 def debug_count_values():
     for info in count_values_variations:
-        board_array = info[0]
+        board_matrix = info[0]
         expected_num_zeros = info[1]
         expected_num_ones = info[2]
         expected_num_twos = info[3]
-        zeros_counted = tic_tac_toe.count_value(board_array, 0)
-        ones_counted = tic_tac_toe.count_value(board_array, 1)
-        twos_counted = tic_tac_toe.count_value(board_array, 2)
+        zeros_counted = tic_tac_toe.count_value(board_matrix, 0)
+        ones_counted = tic_tac_toe.count_value(board_matrix, 1)
+        twos_counted = tic_tac_toe.count_value(board_matrix, 2)
         if zeros_counted is not expected_num_zeros:
             print("count_value: board - {0}, zero count: {1} "
-                  "expected zero count: {2}".format(board_array, zeros_counted,
+                  "expected zero count: {2}".format(board_matrix,
+                                                    zeros_counted,
                                                     expected_num_zeros))
         if ones_counted is not expected_num_ones:
             print("count_value: board - {0}, one count: {1} "
-                  "expected one count: {2}".format(board_array, ones_counted,
+                  "expected one count: {2}".format(board_matrix, ones_counted,
                                                    expected_num_ones))
         if twos_counted is not expected_num_twos:
             print("count_value: board - {0}, two count: {1} "
-                  "expected two count: {2}".format(board_array, twos_counted,
+                  "expected two count: {2}".format(board_matrix, twos_counted,
                                                    expected_num_twos))
 
 

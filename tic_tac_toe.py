@@ -364,7 +364,34 @@ def check_diagonals_partially(board_matrix, n_in_a_row_position_matrix,
 
     return n_in_a_row_position_matrix
 
+def check_rows_partially(board_matrix, n_in_a_row_position_matrix,
+                              n_in_a_row):
+    '''for an nxn matrix, look through the row positions for almost
+    n_in_a_row's (n spaces lined up, where n-1 of them have been played on by
+    the same player, and the last one is empty. In other words, a situation
+    where a player could potentially win on their next turn). Then note these
+    positions, and the potentally winnning player, down on the
+    given n_in_a_row_position_matrix.
 
+    -- board_matrix: an nxn matrix (list of lists)
+    -- n_in_a_row_position_matrix: another nxn matrix, used for recording the
+       locations of any potential n_in_a_row's.
+    -- n_in_a_row: What length constitutes an n_in_a_row
+
+    Returns: reference to the n_in_a_row_position_matrix provided'''
+    delta_i = 0
+    delta_j = 1
+    max_start = len(board_matrix)- n_in_a_row + 1
+    for i in range(len(board_matrix)):
+        for j in range(0, max_start):
+            board_part = get_part_of_board(board_matrix, i, j, 0, 1, n_in_a_row)
+            player, offset = check_list_for_almost_n_in_a_row(board_part,
+                                                              n_in_a_row)
+        if player is not None:
+            note_potential_n_in_a_row(n_in_a_row_position_matrix, player, i, j)      
+    return n_in_a_row_position_matrix
+
+                                      
 def count_value(board_matrix, value):
     '''Counts number of zeros in an nxn matrix
 

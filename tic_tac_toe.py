@@ -176,7 +176,9 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
     -- starting_j: starting column position on the board
     -- delta_i: rate and direction that we move over rows in the board
     -- delta_j: rate and direction that we move over columns in the board
-    -- max_length: max length of the list that we make'''
+    -- max_length: max length of the list that we make
+
+    Returns: a list of values found while moving over the board'''
 
     new_list = []
     # get parameters needed to move over matrix and record values

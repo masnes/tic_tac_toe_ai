@@ -41,10 +41,10 @@ def check_board_vertically_full(board_matrix):
     guaranteed by check_board function'''
     # check vertical rows
     ret = 0
-    # note that vertical_row is a tuple, while in check_board_horizontally
+    # note that column is a tuple, while in check_board_horizontally
     # it's a list. This doesn't affect the (current) implemenation
-    for vertical_row in zip(*board_matrix):
-        items = set(vertical_row)
+    for column in zip(*board_matrix):
+        items = set(column)
         if len(items) == 1:
             ret = items.pop()
             if ret != Player.nobody.value:
@@ -176,7 +176,9 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
     -- starting_j: starting column position on the board
     -- delta_i: rate and direction that we move over rows in the board
     -- delta_j: rate and direction that we move over columns in the board
-    -- max_length: max length of the list that we make'''
+    -- max_length: max length of the list that we make
+
+    Returns: a list of values found while moving over the board'''
 
     new_list = []
     # get parameters needed to move over matrix and record values

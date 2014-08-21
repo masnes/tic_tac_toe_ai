@@ -384,8 +384,9 @@ def check_rows_partially(board_matrix, n_in_a_row_position_matrix,
     Returns: reference to the n_in_a_row_position_matrix provided'''
     delta_i = 0
     delta_j = 1
-    max_start = len(board_matrix) - n_in_a_row + 1
-    for i in range(len(board_matrix)):
+    length = len(board_matrix)
+    max_start = length - n_in_a_row + 1
+    for i in range(length):
         for j in range(0, max_start):
             board_part = get_part_of_board(board_matrix, i, j, delta_i,
                                            delta_j, n_in_a_row)

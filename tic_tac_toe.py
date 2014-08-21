@@ -368,7 +368,7 @@ def check_diagonals_partially(board_matrix, n_in_a_row_position_matrix,
 
 
 def count_value(board_matrix, value):
-    '''Counts number of zeros in an nxn matrix
+    '''Counts number of value in an nxn matrix
 
     -- board_matrix: an nxn matrix
     -- value: value to count'''

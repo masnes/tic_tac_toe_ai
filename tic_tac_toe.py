@@ -239,7 +239,7 @@ def check_diagonals_partially(board_matrix, n_in_a_row_position_matrix,
     '''for an nxn matrix, look through the diagonal positions for almost
     n_in_a_row's (n spaces lined up, where n-1 of them have been played on by
     the same player, and the last one is empty. In other words, a situation
-    where a player could potentially win on their next). Then note these
+    where a player could potentially win on their next turn). Then note these
     positions, and the potentally winnning player, down on the
     given n_in_a_row_position_matrix.
 
@@ -262,9 +262,9 @@ def check_diagonals_partially(board_matrix, n_in_a_row_position_matrix,
     # (i)
     #
     # Note that we have 5 diagonals going each direction (count them),
-    # for a board size of lxl, there's (l*2)-1 diagonals
-    # we can think of the first 3 (l) diagonals as starting at locations
-    # a[0][?]
+    # for a board size of lxl (with l representing length), there's (l*2)-1
+    # diagonals we can think of the first 3 (l) diagonals as starting at
+    # locations a[0][?]
     #
     # let #'s represent diagonals
     # let s# stand for the start of diagonal #

@@ -236,8 +236,8 @@ def note_potential_n_in_a_row(n_in_a_row_position_matrix, player, i, j):
     return
 
 
-def check_diagonals_partially(board_matrix, n_in_a_row_position_matrix,
-                              n_in_a_row):
+def record_almost_diagonals(board_matrix, n_in_a_row_position_matrix,
+                            n_in_a_row):
     '''for an nxn matrix, look through the diagonal positions for almost
     n_in_a_row's (n spaces lined up, where n-1 of them have been played on by
     the same player, and the last one is empty. In other words, a situation
@@ -367,8 +367,7 @@ def check_diagonals_partially(board_matrix, n_in_a_row_position_matrix,
     return n_in_a_row_position_matrix
 
 
-def check_rows_partially(board_matrix, n_in_a_row_position_matrix,
-                         n_in_a_row):
+def record_almost_rows(board_matrix, n_in_a_row_position_matrix, n_in_a_row):
     '''for an nxn matrix, look through the row positions for almost
     n_in_a_row's (n spaces lined up, where n-1 of them have been played on by
     the same player, and the last one is empty. In other words, a situation
@@ -397,8 +396,8 @@ def check_rows_partially(board_matrix, n_in_a_row_position_matrix,
     return n_in_a_row_position_matrix
 
 
-def check_columns_partially(board_matrix, n_in_a_row_position_matrix,
-                            n_in_a_row):
+def record_almost_columns(board_matrix, n_in_a_row_position_matrix,
+                          n_in_a_row):
     '''for an nxn matrix, look through the column positions for almost
     n_in_a_row's (n spaces lined up, where n-1 of them have been played on by
     the same player, and the last one is empty. In other words, a situation

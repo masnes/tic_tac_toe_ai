@@ -41,10 +41,10 @@ def check_board_vertically_full(board_matrix):
     guaranteed by check_board function'''
     # check vertical rows
     ret = 0
-    # note that vertical_row is a tuple, while in check_board_horizontally
+    # note that column is a tuple, while in check_board_horizontally
     # it's a list. This doesn't affect the (current) implemenation
-    for vertical_row in zip(*board_matrix):
-        items = set(vertical_row)
+    for column in zip(*board_matrix):
+        items = set(column)
         if len(items) == 1:
             ret = items.pop()
             if ret != Player.nobody.value:

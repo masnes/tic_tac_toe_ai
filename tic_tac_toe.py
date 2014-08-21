@@ -252,6 +252,8 @@ def record_almost_win_diagonals(board_matrix, n_in_a_row_position_matrix,
 
     Returns: reference to the n_in_a_row_position_matrix provided'''
 
+    # Warning: This is the most complex function in this program!
+    #
     # a diagram of a tic tac toe board is most helpful for understanding the
     # diagonal traversing part of this function (by far the most complex part).
     # The following applies for any board size, but is best illustrated by a
@@ -263,12 +265,17 @@ def record_almost_win_diagonals(board_matrix, n_in_a_row_position_matrix,
     #  2  |  |
     # (i)
     #
-    # Note that we have 5 diagonals going each direction (count them),
-    # for a board size of lxl (with l representing length), there's (l*2)-1
-    # diagonals we can think of the first 3 (l) diagonals as starting at
-    # locations a[0][?]
+    # Note that we have 5 diagonals going each direction (count them. Only
+    # found 3? That's because we count diagonals of length 1 too. See diagrams
+    # below if this is confusing). For a board size of lxl (with l representing
+    # length), there's (l*2)-1 diagonals.
     #
-    # let #'s represent diagonals
+    # For the down-left diagonals (We'll get to the other direction later):
+    #
+    # We can think of the first 3 (l) diagonals as starting at locations
+    # a[0][?]
+    #
+    # let #'s (numbers, eg. 1, 2, 3) represent diagonals
     # let s# stand for the start of diagonal #
     #
     # direction

@@ -400,7 +400,8 @@ def record_almost_win_rows(board_matrix, n_in_a_row_position_matrix,
             player, offset = check_list_for_almost_n_in_a_row(board_part,
                                                               n_in_a_row)
         if player is not None:
-            note_potential_n_in_a_row(n_in_a_row_position_matrix, player, i, j)
+            note_potential_n_in_a_row(n_in_a_row_position_matrix, player, i,
+                                      j+offset)
     return n_in_a_row_position_matrix
 
 
@@ -430,7 +431,8 @@ def record_almost_win_columns(board_matrix, n_in_a_row_position_matrix,
             player, offset = check_list_for_almost_n_in_a_row(board_part,
                                                               n_in_a_row)
         if player is not None:
-            note_potential_n_in_a_row(n_in_a_row_position_matrix, player, i, j)
+            note_potential_n_in_a_row(n_in_a_row_position_matrix, player,
+                                      i+offset, j)
     return n_in_a_row_position_matrix
 
 

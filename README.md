@@ -22,14 +22,14 @@ Additonally, the number of X's or O's in a row required to win may also be speci
 
 This means that we could play 4-in-a-row tic tac toe on a 5x5 game board if we'd like to:
 
- X |   |   |   |
----+---+---+---+---
- O | X |   |   |
----+---+---+---+---
- O |   | X |   |
----+---+---+---+---
- O |   |   | X |
----+---+---+---+---
+ X |   |   |   |</br>
+---+---+---+---+---</br>
+ O | X |   |   |</br>
+---+---+---+---+---</br>
+ O |   | X |   |</br>
+---+---+---+---+---</br>
+ O |   |   | X |</br>
+---+---+---+---+---</br>
    |   |   |   |
 
    X Wins!

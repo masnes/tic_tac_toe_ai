@@ -120,20 +120,25 @@ def check_board_full_n_in_a_row(board_matrix):
     return ret
 
 
-def check_list_for_almost_n_in_a_row(values_sequence, n_in_a_row):
+# TODO: Needs a better name than check_list
+def check_list(values_sequence, n_in_a_row, expected_blank_spaces):
     '''Takes a list of values of size n_in_a_row. Then checks that list
-    for a scenario where all but one of the values represent one player,
-    and the final value represents unplayed. In other words, checks for a
-    situation where one additional play would win the game
+    for a scenario where all but some specified number of values represent one
+    player, and the other value(s) represents unplayed. This function can be
+    used to check for n_in_a_row's (winning situations) and almost_n_in_a_rows
+    (situations where a player is one move away from winning).
 
     -- values_sequence: A list of values representing a partial slice of a
-    board row, column, or diagonal. Must be the same length as n_in_a_row
-
+       board row, column, or diagonal. Must be the same length as n_in_a_row
     -- n_in_a_row: How many consecutive values constitutes an n_in_a_row
+    -- expected_blank_spaces: How many of the n_in_a_row
 
     Returns tuple of:
-        (player who has an almost n_in_a_row for this list,
-         offset from the beginning of the list where the n_in_a_row occurs)'''
+        (player who has the n_in_a_row, almost_n_in_a_row, etc.
+         [list of offsets to blank spaces])
+        or
+        (None, None)
+        if no player meets the criteria specified for this values list'''
     assert len(values_sequence) == n_in_a_row, \
         "values sequence not the same length as an expected n-in-a-row"
     # counters
@@ -141,7 +146,7 @@ def check_list_for_almost_n_in_a_row(values_sequence, n_in_a_row):
     player1_count = 0
     player2_count = 0
     # how far from the start of the list the first unplayed square is
-    unplayed_offset = 0
+    unplayed_offsets = []
 
     # count occurences
     for offset, value in enumerate(values_sequence):
@@ -150,17 +155,17 @@ def check_list_for_almost_n_in_a_row(values_sequence, n_in_a_row):
         elif value == Player.player2.value:
             player2_count += 1
         elif value == Player.nobody.value:
-            unplayed_offset = offset
+            unplayed_offsets.append(offset)
             unplayed_count += 1
 
-    # check for almost_n_in_a_row
-    if unplayed_count == 1:
-        if player1_count == n_in_a_row - 1:
-            return Player.player1.value, unplayed_offset
-        elif player2_count == n_in_a_row - 1:
-            return Player.player2.value, unplayed_offset
+    # check to see if the values_sequence meets the specified criteria
+    if unplayed_count == expected_blank_spaces:
+        if player1_count == n_in_a_row - expected_blank_spaces:
+            return Player.player1.value, unplayed_offsets
+        elif player2_count == n_in_a_row - expected_blank_spaces:
+            return Player.player2.value, unplayed_offsets
 
-    # if no almost_n_in_a_row found
+    # if the values_sequence does not meet the specified criteria
     return None, None
 
 

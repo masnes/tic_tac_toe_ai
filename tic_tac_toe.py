@@ -332,6 +332,64 @@ def move_over_board_recording_potential_wins(board_matrix,
     return
 
 
+def shiny_record_almost_win_diagonals(board_matrix, n_in_a_row_position_matrix,
+                                      n_in_a_row):
+    '''look at a board matrix, and record all the positions where a player
+    can (possibly) play on their next turn to win with a diagonal n_in_a_row.
+    This position is recorded in the n_in_a_row_position_matrix.
+
+    -- board_matrix: nxn matrix containing board state
+    -- n_in_a_row_position_matrix: nxn matrix for recording where players can
+       potentially play on their next turn to make an n_in_a_row. Should be
+       created with all locations set to Player.nobody.value. However, it may
+       be written to by other win-recording functions before being passed to
+       shiny_record_almost_win_diagonals.
+    -- n_in_a_row: How many circles/squares in a row it takes to win.
+
+    Returns: N/A. Makes a state change to n_in_a_row_position_matrix'''
+    length = len(board_matrix)
+    num_diagonals_per_direction = (length*2)-1  # our (l*2)-1 diagonals
+    times_to_move_over_board = num_diagonals_per_direction
+
+    # define parameters for down right diagonals
+    # first ceiling(half) diagonals start at a[?][0]
+    def i_start_func(n, length=length):
+        max(n-length+1, 0)
+
+    # second floor(half) diagonals start at a[0][?]
+    def j_start_func(n, length=length):
+        max(length-n-1, 0)
+    i_end = length-n_in_a_row
+    j_end = length-n_in_a_row
+    delta_i = 1
+    delta_j = 1
+    # record for down right diagonals
+    move_over_board_recording_potential_wins(board_matrix,
+                                             n_in_a_row_position_matrix,
+                                             n_in_a_row, i_start_func,
+                                             j_start_func, i_end, j_end,
+                                             delta_i, delta_j,
+                                             times_to_move_over_board)
+
+    # define parameters for up right diagonals
+    # first ceiling(half) diagonals start at a[?][length-1]
+    def i_start_func(n, length=length):
+        max(length-n-1, 0)
+
+    # second floor(half) diagonals start at a[0][?]
+    def j_start_func(n, length=length,
+                     num_diagonals_per_direction=times_to_move_over_board):
+        min(length-1, num_diagonals_per_direction-n-1)
+    delta_i = 1
+    delta_j = -1
+    move_over_board_recording_potential_wins(board_matrix,
+                                             n_in_a_row_position_matrix,
+                                             n_in_a_row, i_start_func,
+                                             j_start_func, i_end, j_end,
+                                             delta_i, delta_j,
+                                             times_to_move_over_board)
+
+
 def record_almost_win_diagonals(board_matrix, n_in_a_row_position_matrix,
                                 n_in_a_row):
     '''for an nxn matrix, look through the diagonal positions for almost

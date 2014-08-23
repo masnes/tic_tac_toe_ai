@@ -214,7 +214,10 @@ def note_potential_n_in_a_row(n_in_a_row_position_matrix, player, i, j):
 
     -- player: the player who can potentially create an n_in_a_row
     -- i: row at which n_in_a_row could be produced
-    -- j: column at which n_in_a_row could be produced'''
+    -- j: column at which n_in_a_row could be produced
+
+    Returns: N/A. The work done is just a state change to
+    n_in_a_row_position_matrix'''
 
     assert player == Player(player).value,\
         "Unrecognized player given to n_in_a_row_position_matrix"

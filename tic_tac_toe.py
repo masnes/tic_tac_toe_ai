@@ -267,6 +267,71 @@ def generate_check_in_range_function(delta_val):
     return val_in_range
 
 
+def move_over_board_recording_potential_wins(board_matrix,
+                                             n_in_a_row_position_matrix,
+                                             n_in_a_row, i_start_func,
+                                             j_start_func, i_end, j_end,
+                                             delta_i, delta_j,
+                                             num_locations_to_start_at):
+    '''Given some initial parameters, move over a board_matrix in a given way
+    and check to see which locations on that board_matrix a player could
+    possibly play on their next turn to win the game. Record those locations to
+    given n_in_a_row_position_matrix.
+
+    -- board_matrix: nxn matrix containing board state
+    -- n_in_a_row_position_matrix: nxn matrix for recording where players can
+       potentially play on their next turn to make an n_in_a_row. Should be
+       created with all locations set to Player.nobody.value. However, it may
+       be written to by other win-recording functions before being passed to
+       shiny_record_almost_win_diagonals.
+    -- n_in_a_row: How many circles/squares in a row it takes to win.
+    -- i_start_func: A function which takes in the number of times we've looked
+       at the board already, and gives back a location to start looking next
+       time for i
+    -- j_start_func: Same as i_start_func, but for j
+    -- i_end: What value i should stop at. Note that this may be greater than,
+       or less than the value i starts at initially. It must be on the board
+       however.
+    -- j_end: Same as i_end, but for j
+    -- delta_i: Rate and direction of change for i. May be positive or negative
+    -- delta_j: Same as delta_i, but for j
+    -- num_locations_to_start_at: How many times to look at the board,
+       eg.  for a board of size 3x3, to get all the rows, we'd want to look
+       over it once per row: 3 times.
+
+    Returns: N/A. Makes a state change to n_in_a_row_position_matrix'''
+
+    assert delta_i != 0 or delta_j != 0, \
+        "trying to move over board but staying in place! " \
+        "Please provide a non zero delta_i, and/or delta_j"
+    assert 0 <= i_end < len(board_matrix), "Must end somewhere on the board"
+    assert 0 <= j_end < len(board_matrix), "Must end somewhere on the board"
+
+    i_in_range = generate_check_in_range_function(delta_i)
+    j_in_range = generate_check_in_range_function(delta_j)
+    # Look at each starting location
+    for n in range(num_locations_to_start_at):
+        i_start = i_start_func(n)
+        j_start = j_start_func(n)
+        i = i_start
+        j = j_start
+        # Get all n_in_a_row sized lists moving from that starting location
+        # to defined ending location
+        while i_in_range(i_start, i, i_end) and j_in_range(j_start, j, j_end):
+            board_part = get_part_of_board(board_matrix, i, j, delta_i,
+                                           delta_j, n_in_a_row)
+            player, offset = check_list_for_almost_n_in_a_row(board_part,
+                                                              n_in_a_row)
+            if player is not None:
+                offset_i = i + (offset * delta_i)
+                offset_j = j + (offset * delta_j)
+                note_potential_n_in_a_row(n_in_a_row_position_matrix, player,
+                                          offset_i, offset_j)
+            i += delta_i
+            j += delta_j
+    return
+
+
 def record_almost_win_diagonals(board_matrix, n_in_a_row_position_matrix,
                                 n_in_a_row):
     '''for an nxn matrix, look through the diagonal positions for almost

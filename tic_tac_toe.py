@@ -239,6 +239,34 @@ def note_potential_n_in_a_row(n_in_a_row_position_matrix, player, i, j):
     return
 
 
+def generate_check_in_range_function(delta_val):
+    '''Build a function to check if a value, val, is in between two other
+    values.  It is assumed that x is initially in between the two other values
+
+    -- delta_val: rate of change as val moves between the two values
+
+    potential bug: This function will return True if delta_val is 0, regardless
+    of whether val is between the barriers. This behavior is built in because
+    it is expected for val to start between the barriers. If delta_val is
+    0, val would never move, so val could then be expected to stay between the
+    barriers
+
+    Returns: A function to test whether a value is between two parameters
+
+    parameters for **returned** function:
+    --- val: The value being checked
+    --- barrier_a: One barrier that val must be between
+    --- barrier_b: The other barrier that val must be between
+    *** Returns: True or False'''
+    if delta_val == 0:
+        def val_in_range(barrier_a, val, barrier_b):
+            True
+    else:  # some delta
+        def val_in_range(barrier_a, val, barrier_b):
+            min(barrier_a, barrier_b) <= val <= max(barrier_a, barrier_b)
+    return val_in_range
+
+
 def record_almost_win_diagonals(board_matrix, n_in_a_row_position_matrix,
                                 n_in_a_row):
     '''for an nxn matrix, look through the diagonal positions for almost

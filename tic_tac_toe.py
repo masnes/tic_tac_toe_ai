@@ -96,7 +96,7 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
     i = starting_i
     j = starting_j
     while i_min <= i <= i_max and j_min <= j <= j_max:
-        board_part.append(board_matrix[i][j])
+        board_part.append((board_matrix[i][j], i, j))
         i += delta_i
         j += delta_j
     return board_part

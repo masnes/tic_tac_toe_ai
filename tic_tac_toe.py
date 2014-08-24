@@ -128,39 +128,10 @@ def generate_check_in_range_function(delta_val):
     return val_in_range
 
 
-def move_over_board_recording_potential_wins(board_matrix,
-                                             n_in_a_row_position_matrix,
-                                             n_in_a_row, i_start_func,
-                                             j_start_func, i_end, j_end,
-                                             delta_i, delta_j,
-                                             num_locations_to_start_at):
-    '''Given some initial parameters, move over a board_matrix in a given way
-    and check to see which locations on that board_matrix a player could
-    possibly play on their next turn to win the game. Record those locations to
-    given n_in_a_row_position_matrix.
-
-    -- board_matrix: nxn matrix containing board state
-    -- n_in_a_row_position_matrix: nxn matrix for recording where players can
-       potentially play on their next turn to make an n_in_a_row. Should be
-       created with all locations set to Player.nobody.value. However, it may
-       be written to by other win-recording functions before being passed to
-       shiny_record_almost_win_diagonals.
-    -- n_in_a_row: How many circles/squares in a row it takes to win.
-    -- i_start_func: A function which takes in the number of times we've looked
-       at the board already, and gives back a location to start looking next
-       time for i
-    -- j_start_func: Same as i_start_func, but for j
-    -- i_end: What value i should stop at. Note that this may be greater than,
-       or less than the value i starts at initially. It must be on the board
-       however.
-    -- j_end: Same as i_end, but for j
-    -- delta_i: Rate and direction of change for i. May be positive or negative
-    -- delta_j: Same as delta_i, but for j
-    -- num_locations_to_start_at: How many times to look at the board,
-       eg.  for a board of size 3x3, to get all the rows, we'd want to look
-       over it once per row: 3 times.
-
-    Returns: N/A. Makes a state change to n_in_a_row_position_matrix'''
+def get_board_pieces(board_matrix, piece_length, i_start_func, j_start_func,
+                     i_end, j_end, delta_i, delta_j,
+                     num_locations_to_get_pieces_from):
+    '''Given some initial parameters, break the board down into pieces'''
 
     assert delta_i != 0 or delta_j != 0, \
         "trying to move over board but staying in place! " \

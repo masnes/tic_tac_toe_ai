@@ -15,52 +15,56 @@ class Player(Enum):
 
 
 # TODO: Needs a better name than check_list
-def check_list(values_sequence, n_in_a_row, expected_blank_spaces):
+def check_list(board_slice, n_in_a_row, expected_blank_spaces):
     '''Takes a list of values of size n_in_a_row. Then checks that list
     for a scenario where all but some specified number of values represent one
     player, and the other value(s) represents unplayed. This function can be
     used to check for n_in_a_row's (winning situations) and almost_n_in_a_rows
     (situations where a player is one move away from winning).
 
-    -- values_sequence: A list of values representing a partial slice of a
-       board row, column, or diagonal. Must be the same length as n_in_a_row
+    -- board_slice: A list of values representing a partial slice of a
+       board row, column, or diagonal. List should be in format:
+       [(val, i, j),..], and Must be the same length as n_in_a_row
     -- n_in_a_row: How many consecutive values constitutes an n_in_a_row
     -- expected_blank_spaces: How many of the n_in_a_row
 
     Returns tuple of:
-        (player who has the n_in_a_row, almost_n_in_a_row, etc.
-         [list of offsets to blank spaces])
+        (player who has the n_in_a_row, almost_n_in_a_row, etc.,
+         (i, j) of last empty space)
         or
         (None, None)
         if no player meets the criteria specified for this values list'''
-    assert len(values_sequence) == n_in_a_row, \
+    assert len(board_slice) == n_in_a_row, \
         "values sequence not the same length as an expected n-in-a-row"
     # counters
     unplayed_count = 0
     player1_count = 0
     player2_count = 0
     # how far from the start of the list the first unplayed square is
-    unplayed_offsets = []
+    unplayed_locations = []
 
     # count occurences
-    for offset, value in enumerate(values_sequence):
+    for location in board_slice:
+        value = location[0]
+        i = location[1]
+        j = location[2]
         if value == Player.player1.value:
             player1_count += 1
         elif value == Player.player2.value:
             player2_count += 1
         elif value == Player.nobody.value:
-            unplayed_offsets.append(offset)
             unplayed_count += 1
+            unplayed_locations.append((i, j))
 
     # check to see if the values_sequence meets the specified criteria
     if unplayed_count == expected_blank_spaces:
         if player1_count == n_in_a_row - expected_blank_spaces:
-            return Player.player1.value, unplayed_offsets
+            return Player.player1.value, unplayed_locations
         elif player2_count == n_in_a_row - expected_blank_spaces:
-            return Player.player2.value, unplayed_offsets
+            return Player.player2.value, unplayed_locations
 
     # if the values_sequence does not meet the specified criteria
-    return None, None
+    return None, unplayed_locations
 
 
 def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,

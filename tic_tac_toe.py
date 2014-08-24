@@ -159,7 +159,46 @@ def get_board_pieces(board_matrix, piece_length, i_start_func, j_start_func,
     return list_of_board_pieces
 
 
-def shiny_record_almost_win_diagonals(board_matrix, n_in_a_row_position_matrix,
+def note_location(position_matrix, player, i, j):
+    '''Call this function if a potential n_in_a_row is found (n-1 squares lined
+    up horizontally, vertically, or diagonally, with the final square empty).
+    It notes the location of the n_in_a_row, and the player who can
+    make an n_in_a_row there in a provided position_matrix. If
+    another n_in_a_row has been found already in the same position, this
+    function will update the state of position_matrix to record that
+    both players can make an n_in_a_row by playing there
+
+    -- position_matrix: a board_matrix sized matrix used for noting
+       where n_in_a_row's could potentially be produced next turn, and who they
+       could be produced by
+
+    -- player: the player who can potentially create an n_in_a_row
+    -- i: row at which n_in_a_row could be produced
+    -- j: column at which n_in_a_row could be produced
+
+    Returns: N/A. The work done is just a state change to
+    position_matrix'''
+
+    assert player == Player(player).value,\
+        "Unrecognized player given to position_matrix"
+    assert player != Player.nobody.value, \
+        "Noting that nobody is making a potential n_in_a_row is useless"
+
+    current = position_matrix[i][j]
+    currently_nobody_at_this_position = (current == Player.nobody.value)
+    currently_player1_at_this_position = (current == Player.player1.value)
+    currently_player2_at_this_position = (current == Player.player2.value)
+    a_new_player_at_this_position = (current != player)
+
+    if currently_nobody_at_this_position:
+        position_matrix[i][j] = player
+    elif (currently_player1_at_this_position or
+            currently_player2_at_this_position):
+        if a_new_player_at_this_position:
+            position_matrix[i][j] = Player.both.value
+    return
+
+
                                       n_in_a_row):
     '''look at a board matrix, and record all the positions where a player
     can (possibly) play on their next turn to win with a diagonal n_in_a_row.

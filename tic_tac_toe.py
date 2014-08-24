@@ -141,29 +141,22 @@ def get_board_pieces(board_matrix, piece_length, i_start_func, j_start_func,
     assert 0 <= i_end < len(board_matrix), "Must end somewhere on the board"
     assert 0 <= j_end < len(board_matrix), "Must end somewhere on the board"
 
+    list_of_board_pieces = []
     i_in_range = generate_check_in_range_function(delta_i)
     j_in_range = generate_check_in_range_function(delta_j)
     # Look at each starting location
-    for n in range(num_locations_to_start_at):
+    for n in range(num_locations_to_get_pieces_from):
         i_start = i_start_func(n)
         j_start = j_start_func(n)
         i = i_start
         j = j_start
-        # Get all n_in_a_row sized lists moving from that starting location
-        # to defined ending location
         while i_in_range(i_start, i, i_end) and j_in_range(j_start, j, j_end):
-            board_part = get_part_of_board(board_matrix, i, j, delta_i,
-                                           delta_j, n_in_a_row)
-            player, offset = check_list_for_almost_n_in_a_row(board_part,
-                                                              n_in_a_row)
-            if player is not None:
-                offset_i = i + (offset * delta_i)
-                offset_j = j + (offset * delta_j)
-                note_potential_n_in_a_row(n_in_a_row_position_matrix, player,
-                                          offset_i, offset_j)
+            board_piece = get_part_of_board(board_matrix, i, j, delta_i,
+                                            delta_j, piece_length)
+            list_of_board_pieces.append(board_piece)
             i += delta_i
             j += delta_j
-    return
+    return list_of_board_pieces
 
 
 def shiny_record_almost_win_diagonals(board_matrix, n_in_a_row_position_matrix,

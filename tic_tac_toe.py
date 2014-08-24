@@ -83,25 +83,23 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
 
     Returns: a list of values found while moving over the board'''
 
-    new_list = []
+    board_part = []
     # get parameters needed to move over matrix and record values
     possible_i_movement = abs((max_length-1) * delta_i)
     possible_j_movement = abs((max_length-1) * delta_j)
-    i_max = min(len(board_matrix) - 1, starting_i + possible_i_movement)
-    j_max = min(len(board_matrix) - 1, starting_j + possible_j_movement)
-    i_min = max(0, starting_i - possible_i_movement)
-    j_min = max(0, starting_j - possible_j_movement)
+    i_max = min(len(board_matrix)-1, starting_i+possible_i_movement)
+    j_max = min(len(board_matrix)-1, starting_j+possible_j_movement)
+    i_min = max(0, starting_i-possible_i_movement)
+    j_min = max(0, starting_j-possible_j_movement)
 
     # move over the matrix, recording the values found
     i = starting_i
     j = starting_j
     while i_min <= i <= i_max and j_min <= j <= j_max:
-        new_list.append(board_matrix[i][j])
+        board_part.append(board_matrix[i][j])
         i += delta_i
         j += delta_j
-    return new_list
-
-
+    return board_part
 
 
 def generate_check_in_range_function(delta_val):

@@ -72,7 +72,7 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
     '''given a board_matrix, a position on that board matrix, a
     direction/velocity to travel from that position, and a number of values to
     try for: make a list of up to that size, by moving in that direction over
-    the board, recording found values
+    the board, recording found values. List is in format [(val, i, j),..]
 
     -- board_matrix: an nxn matrix carrying the current board state
     -- starting_i: starting row position on the board

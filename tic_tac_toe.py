@@ -199,64 +199,147 @@ def note_location(position_matrix, player, i, j):
     return
 
 
-def shiny_record_almost_win_diagonals(board_matrix, position_matrix,
-                                      n_in_a_row):
-    '''look at a board matrix, and record all the positions where a player
-    can (possibly) play on their next turn to win with a diagonal n_in_a_row.
-    This position is recorded in the position_matrix.
+def get_diagonal_slices(board_matrix,  n_in_a_row):
+    '''Look at a board matrix, return all n_in_a_row sized diagonal board
+    slices. A board slice is a list of [(board_val, i, j),..] of
+    n_in_a_row length.
 
-    -- board_matrix: nxn matrix containing board state
-    -- position_matrix: nxn matrix for recording where players can
-       potentially play on their next turn to make an n_in_a_row. Should be
-       created with all locations set to Player.nobody.value. However, it may
-       be written to by other win-recording functions before being passed to
-       shiny_record_almost_win_diagonals.
-    -- n_in_a_row: How many circles/squares in a row it takes to win.
 
-    Returns: N/A. Makes a state change to position_matrix'''
+    -- board_matrix: an nxn matrix carrying the current board state
+    -- n_in_a_row: The length of an n_in_a_row
+
+    Returns: List of all diagonal board slices'''
+    # Warning: This is the most complex function in this program!
+    #
+    # a diagram of a tic tac toe board is most helpful for understanding the
+    # diagonal traversing part of this function (by far the most complex part).
+    # The following applies for any board size, but is best illustrated by a
+    # 3x3 board:
+    #
+    #    0  1  2 (j)
+    #  0__|__|__
+    #  1__|__|__
+    #  2  |  |
+    # (i)
+    #
+    # Note that we have 5 diagonals going each direction (count them. Only
+    # found 3? That's because we count diagonals of length 1 too. See diagrams
+    # below if this is confusing). For a board size of lxl (with l representing
+    # length), there's (l*2)-1 diagonals.
+    #
+    # For the down-left diagonals (We'll get to the other direction later):
+    #
+    # We can think of the first 3 (l) diagonals as starting at locations
+    # a[0][?]
+    #
+    # let #'s (numbers, eg. 1, 2, 3) represent diagonals
+    # let s# stand for the start of diagonal #
+    #
+    # direction
+    # v       starting column is not determinate
+    #  \       v  v  v
+    #   \     s3|s2|s1 <- starting row is determinate
+    #    \    __|_3|_2
+    #     v     |  | 3
+    #
+    # and the rest starting at a[0][?]
+    #
+    #   starting column is determinate
+    #   v
+    #  __|__|__
+    #  s4|__|__ < starting row
+    #  s5| 4|   < is not
+    #
+    # given a starting row, and column position starting_i, starting_j,
+    # we can get the rest of the diagonal by incrementing i, j from
+    # starting_i, starting_j to the end of the board
+    #
+    # the diagonals moving the other direction are similar, but not exactly the
+    # same. We need to rotate the above diagram, and then move in the other
+    # direction:
+    #
+    #    0  1  3 (j)      v
+    #  0 s5|s4|s3        /
+    #    --+--+--       /  new
+    #  1  4| 3|s2      /   direction
+    #    --+--+--     /
+    #  2  3| 2|s1    v
+    # (i)
+    #
+    # The final thing to note is that we only look at chunks of the diagonal
+    # that are n_in_a_row sized. Bigger chunks are broken up into
+    # n_in_a_row sized chunks, and smaller chunks are ignored.
+    #
+    # Ex. For n_in_a_row = 2 on a 4x4 board. We'd break up the center
+    # down right diagonal as follows (into lists represented as a, b, and c):
+    #
+    #    0  1  2  3 (j)
+    #  0 a |  |  |
+    #    --+--+--+--
+    #  1   |ab|  |
+    #    --+--+--+--
+    #  2   |  |bc|
+    #    --+--+--+--
+    #  3   |  |  |c
+    # (i)
+    #
+    # For n_in_a_row = 3 on a 4x4 board, we'd break up the down right diagonals
+    # for whole board as follows,
+    #    0  1  2  3 (j)
+    #  0 b |a |  |
+    #    --+--+--+--
+    #  1 d |bc|a |
+    #    --+--+--+--
+    #  2   |d |bc|a
+    #    --+--+--+--
+    #  3   |  |d |c
+    # (i)
+    #
+    # So we are ignoring some of the rows!
     length = len(board_matrix)
-    num_diagonals_per_direction = (length*2)-1  # our (l*2)-1 diagonals
-    times_to_move_over_board = num_diagonals_per_direction
+    num_diagonals_a_direction = (length*2)-1  # our (l*2)-1 diagonals
+    # but we don't want diagonals that are shorter than n_in_a_row
+    num_diagonals_ignored = (n_in_a_row-1)*2
+    num_diagonals_to_look_at = num_diagonals_a_direction-num_diagonals_ignored
+    times_to_move_over_board = num_diagonals_to_look_at
 
     # define parameters for down right diagonals
     # first ceiling(half) diagonals start at a[?][0]
-    def i_start_func(n, length=length):
-        max(n-length+1, 0)
+    def i_start_func(n, length=length, num_ignored=num_diagonals_ignored):
+        max(n-length-num_ignored+1, 0)
 
     # second floor(half) diagonals start at a[0][?]
-    def j_start_func(n, length=length):
-        max(length-n-1, 0)
+    def j_start_func(n, length=length, num_ignored=num_diagonals_ignored):
+        max(length-n+num_ignored-1, 0)
     i_end = length-n_in_a_row
     j_end = length-n_in_a_row
     delta_i = 1
     delta_j = 1
     # record for down right diagonals
-    move_over_board_recording_potential_wins(board_matrix,
-                                             position_matrix,
-                                             n_in_a_row, i_start_func,
-                                             j_start_func, i_end, j_end,
-                                             delta_i, delta_j,
-                                             times_to_move_over_board)
+    down_right_board_pieces = get_board_pieces(board_matrix, n_in_a_row,
+                                               i_start_func, j_start_func,
+                                               i_end, j_end, delta_i, delta_j,
+                                               times_to_move_over_board)
 
     # define parameters for up right diagonals
     # first ceiling(half) diagonals start at a[?][length-1]
-    def i_start_func(n, length=length):
-        max(length-n-1, 0)
+    def i_start_func(n, length=length, num_ignored=num_diagonals_ignored):
+        max(length-n+num_ignored-1, 0)
 
     # second floor(half) diagonals start at a[0][?]
-    def j_start_func(n, length=length,
+    def j_start_func(n, length=length, num_ignored=num_diagonals_ignored,
                      num_diagonals_per_direction=times_to_move_over_board):
         min(length-1, num_diagonals_per_direction-n-1)
     i_end = length-n_in_a_row
     j_end = length-n_in_a_row
     delta_i = 1
     delta_j = -1
-    move_over_board_recording_potential_wins(board_matrix,
-                                             position_matrix,
-                                             n_in_a_row, i_start_func,
-                                             j_start_func, i_end, j_end,
-                                             delta_i, delta_j,
-                                             times_to_move_over_board)
+    down_left_board_pieces = get_board_pieces(board_matrix, n_in_a_row,
+                                              i_start_func, j_start_func,
+                                              i_end, j_end, delta_i, delta_j,
+                                              times_to_move_over_board)
+
+    return down_right_board_pieces+down_left_board_pieces
 
 
 def record_almost_win_diagonals(board_matrix, position_matrix,

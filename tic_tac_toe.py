@@ -1,5 +1,5 @@
 import cProfile
-import queue
+# import queue
 from enum import Enum
 
 
@@ -192,13 +192,13 @@ def note_location(position_matrix, player, i, j):
     if currently_nobody_at_this_position:
         position_matrix[i][j] = player
     elif (currently_player1_at_this_position or
-            currently_player2_at_this_position):
+          currently_player2_at_this_position):
         if a_new_player_at_this_position:
             position_matrix[i][j] = Player.both.value
     return
 
 
-def get_diagonal_slices(board_matrix,  n_in_a_row):
+def get_diagonal_slices(board_matrix, n_in_a_row):
     '''Look at a board matrix, return all n_in_a_row sized diagonal board
     slices. A board slice is a list of [(board_val, i, j),..] of
     n_in_a_row length.
@@ -414,7 +414,7 @@ def swap_players(player):
         return Player.player2.value
 
 
-class WhosTurnGenerator():
+class WhosTurnGenerator(object):
     '''Alternates turns between player 1 and player 2
 
     -- player_one_starts: Bool, option to initiate the generator
@@ -437,9 +437,9 @@ class WhosTurnGenerator():
 
 
 def copy_list_of_lists(board_matrix):
-    '''Given a list of lists (a board_matrix), produce a copy of all items within
-    that list and return the copy. Useful for avoiding python pass-by-reference
-    issues
+    '''Given a list of lists (a board_matrix), produce a copy of all items
+    within that list and return the copy. Useful for avoiding python
+    pass-by-reference issues
 
     -- board_matrix: an nxn matrix holding the current state of play'''
     new_board_matrix = []
@@ -510,8 +510,8 @@ def add_node_to_tree(board_matrix, parent_node):
 
 
 def get_new_depth(max_depth):
-    '''reduce max_depth by one if max_depth is a number. If max_depth is None, keep
-    it as None
+    '''reduce max_depth by one if max_depth is a number. If max_depth is None,
+    keep it as None
 
     max_depth -- a measure of how many more recursions are allowed. Once this
     reaches 0 recursion stops. If None, infinite recursions are allowed (the

@@ -122,10 +122,9 @@ def generate_check_in_range_function(delta_val):
     --- barrier_b: The other barrier that val must be between
     *** Returns: True or False'''
     if delta_val == 0:
-        def val_in_range(barrier_a, val, barrier_b):
-            True
+        val_in_range = lambda barrier_a, val, barrier_b: True
     else:  # some delta
-        def val_in_range(barrier_a, val, barrier_b):
+        val_in_range = lambda barrier_a, val, barrier_b: \
             min(barrier_a, barrier_b) <= val <= max(barrier_a, barrier_b)
     return val_in_range
 
@@ -305,11 +304,10 @@ def get_diagonal_slices(board_matrix,  n_in_a_row):
 
     # define parameters for down right diagonals
     # first ceiling(half) diagonals start at a[?][0]
-    def i_start_func(n, length=length, num_ignored=num_diagonals_ignored):
+    i_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
         max(n-length-num_ignored+1, 0)
-
     # second floor(half) diagonals start at a[0][?]
-    def j_start_func(n, length=length, num_ignored=num_diagonals_ignored):
+    j_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
         max(length-n+num_ignored-1, 0)
     i_end = length-n_in_a_row
     j_end = length-n_in_a_row
@@ -323,12 +321,11 @@ def get_diagonal_slices(board_matrix,  n_in_a_row):
 
     # define parameters for up right diagonals
     # first ceiling(half) diagonals start at a[?][length-1]
-    def i_start_func(n, length=length, num_ignored=num_diagonals_ignored):
+    i_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
         max(length-n+num_ignored-1, 0)
-
     # second floor(half) diagonals start at a[0][?]
-    def j_start_func(n, length=length, num_ignored=num_diagonals_ignored,
-                     num_diagonals_per_direction=times_to_move_over_board):
+    j_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored,\
+        num_diagonals_per_direction=times_to_move_over_board:\
         min(length-1, num_diagonals_per_direction-n-1)
     i_end = length-n_in_a_row
     j_end = length-n_in_a_row

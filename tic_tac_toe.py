@@ -380,6 +380,19 @@ def get_column_slices(board_matrix, n_in_a_row):
     return column_slices
 
 
+def get_all_board_slices(board_matrix, n_in_a_row):
+    '''Get all n_in_a_row length slices of the rows, columns, and diagonals in
+    a board_matrix. A slice is a list containing tuples in the form
+    [(val_at_position, i, j),..].
+
+    -- board_matrix: an nxn matrix representing the tic tac toe board
+    -- n_in_a_row: How many X's or O's there are in a row'''
+    row_slices = get_row_slices(board_matrix, n_in_a_row)
+    column_slices = get_column_slices(board_matrix, n_in_a_row)
+    diagonal_slices = get_diagonal_slices(board_matrix, n_in_a_row)
+    return row_slices + column_slices + diagonal_slices
+
+
 def count_value(board_matrix, value):
     '''Counts number of value in an nxn matrix
 

@@ -415,6 +415,18 @@ def check_slices_for_almost_n_in_a_rows(position_matrix, board_slices,
             note_location(position_matrix, player, i, j)
 
 
+def check_slices_for_a_winning_player(board_slices, n_in_a_row):
+    expected_blank_spaces = 0
+    for board_slice in board_slices:
+        player, unplayed_locations = check_list(board_slice, n_in_a_row,
+                                                expected_blank_spaces)
+        if len(unplayed_locations) == 0 and (player == Player.player1.value or
+                                             player == Player.player2.value):
+            return player
+
+    return None
+
+
 def count_value(board_matrix, value):
     '''Counts number of value in an nxn matrix
 

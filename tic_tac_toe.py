@@ -50,32 +50,16 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
     return board_part
 
 
-def generate_check_in_range_function(delta_val):
-    '''Build a function to check if a value, val, is in between two other
-    values.  It is assumed that val is initially in between the two other
-    values
+def in_between(barrier_a, val, barrier_b):
+    '''Check if a value is between to other barrier values. Works
+    regardless of which barrier value is greater
 
-    -- delta_val: rate of change as val moves between the two values
+    -- barrier_a: One value that val must be in between
+    -- val: The value that we're checking
+    -- barrier_b: The other value that val must be in between
 
-    potential bug: This function will return True if delta_val is 0, regardless
-    of whether val is between the barriers. This behavior is built in because
-    it is expected for val to start between the barriers. If delta_val is
-    0, val would never move, so val could then be expected to stay between the
-    barriers
-
-    Returns: A function to test whether a value is between two parameters
-
-    parameters for **returned** function:
-    --- val: The value being checked
-    --- barrier_a: One barrier that val must be between
-    --- barrier_b: The other barrier that val must be between
-    *** Returns: True or False'''
-    if delta_val == 0:
-        val_in_range = lambda barrier_a, val, barrier_b: True
-    else:  # some delta
-        val_in_range = lambda barrier_a, val, barrier_b: \
-            min(barrier_a, barrier_b) <= val <= max(barrier_a, barrier_b)
-    return val_in_range
+    Returns: True or False'''
+    return (barrier_a <= val <= barrier_b) or (barrier_b <= val <= barrier_a)
 
 
 def get_board_pieces(board_matrix, piece_length, i_start_func, j_start_func,
@@ -90,8 +74,6 @@ def get_board_pieces(board_matrix, piece_length, i_start_func, j_start_func,
     assert 0 <= j_end < len(board_matrix), "Must end somewhere on the board"
 
     list_of_board_pieces = []
-    i_in_range = generate_check_in_range_function(delta_i)
-    j_in_range = generate_check_in_range_function(delta_j)
     # Look at each starting location
     for n in range(num_locations_to_get_pieces_from):
         i_start = i_start_func(n)
@@ -99,7 +81,7 @@ def get_board_pieces(board_matrix, piece_length, i_start_func, j_start_func,
         i = i_start
         j = j_start
         # get all piece_length sized board_pieces from given starting location
-        while i_in_range(i_start, i, i_end) and j_in_range(j_start, j, j_end):
+        while in_between(i_start, i, i_end) and in_between(j_start, j, j_end):
             board_piece = get_part_of_board(board_matrix, i, j, delta_i,
                                             delta_j, piece_length)
             if len(board_piece) == piece_length:

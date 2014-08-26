@@ -240,13 +240,22 @@ def get_row_slices(board_matrix, n_in_a_row):
 
     -- board_matrix: an nxn matrix representing the tic tac toe board
     -- n_in_a_row: How many X's or O's there are in a row'''
+    # Note: I considered doing this with list slicing (row lists are easy to
+    # get after all). However, I found that this quickly became confusing once
+    # I began trying to also note the i and j location down (It required 3
+    # nested loops, and remembering which is i and which is j). I think this
+    # way is simpler
+
     piece_length = n_in_a_row
+    # Start from beginning of each row
     i_start_func = lambda n: n
     j_start_func = lambda n: 0
-    i_end = n_in_a_row-1
-    j_end = n_in_a_row-1
+    # move over the row
     delta_i = 0
     delta_j = 1
+    # End at edge of board (will get stopped by piece_length first most likely)
+    i_end = n_in_a_row-1
+    j_end = n_in_a_row-1
     num_locations_to_get_pieces_from = len(board_matrix)
     row_slices = get_board_pieces(board_matrix, piece_length, i_start_func,
                                   j_start_func, i_end, j_end, delta_i, delta_j,
@@ -260,13 +269,22 @@ def get_column_slices(board_matrix, n_in_a_row):
 
     -- board_matrix: an nxn matrix representing the tic tac toe board
     -- n_in_a_row: How many X's or O's there are in a row'''
+    # Note: I considered doing this with list slicing (column lists are easy to
+    # get after all). However, I found that this quickly became confusing once
+    # I began trying to also note the i and j location down (It required 3
+    # nested loops, and remembering which is i and which is j). I think this
+    # way is simpler
+
     piece_length = n_in_a_row
+    # Start from beginning of each column
     i_start_func = lambda n: 0
     j_start_func = lambda n: n
-    i_end = n_in_a_row-1
-    j_end = n_in_a_row-1
+    # Move over the column
     delta_i = 1
     delta_j = 0
+    # End at edge of board (will get stopped by piece_length first most likely)
+    i_end = n_in_a_row-1
+    j_end = n_in_a_row-1
     num_locations_to_get_pieces_from = len(board_matrix)
     column_slices = get_board_pieces(board_matrix, piece_length, i_start_func,
                                      j_start_func, i_end, j_end, delta_i,

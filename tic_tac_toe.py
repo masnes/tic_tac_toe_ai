@@ -97,10 +97,12 @@ def get_board_pieces(board_matrix, piece_length, i_start_func, j_start_func,
         j_start = j_start_func(n)
         i = i_start
         j = j_start
+        # get all piece_length sized board_pieces from given starting location
         while i_in_range(i_start, i, i_end) and j_in_range(j_start, j, j_end):
             board_piece = get_part_of_board(board_matrix, i, j, delta_i,
                                             delta_j, piece_length)
-            list_of_board_pieces.append(board_piece)
+            if len(board_piece) == piece_length:
+                list_of_board_pieces.append(board_piece)
             i += delta_i
             j += delta_j
     return list_of_board_pieces

@@ -1,4 +1,5 @@
 import cProfile
+import itertools
 # import queue
 from enum import Enum
 
@@ -616,11 +617,11 @@ def build_new_board_matrix(dimensions):
     initialize to all 0's
 
     -- dimensions: the size of n for our nxn board_matrix'''
-    sub_list = []
     board_matrix = []
-    for i in range(dimensions):
-        sub_list.append(0)
-    for j in range(dimensions):
+    for _ in itertools.repeat(None, dimensions):
+        sub_list = []
+        for _ in itertools.repeat(None, dimensions):
+            sub_list.append(0)
         board_matrix.append(sub_list)
     return board_matrix
 

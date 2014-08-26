@@ -51,7 +51,8 @@ def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
 
 def generate_check_in_range_function(delta_val):
     '''Build a function to check if a value, val, is in between two other
-    values.  It is assumed that x is initially in between the two other values
+    values.  It is assumed that val is initially in between the two other
+    values
 
     -- delta_val: rate of change as val moves between the two values
 
@@ -201,7 +202,9 @@ def get_diagonal_slices(board_matrix, n_in_a_row):
     #  3   |  |d |c
     # (i)
     #
-    # So we are ignoring some of the rows!
+    # So we are ignoring some of the rows! Specifically, we're ignoring
+    # (n_in_a_row-1)*2 of them.
+
     length = len(board_matrix)
     num_diagonals_a_direction = (length*2)-1  # our (l*2)-1 diagonals
     # but we don't want diagonals that are shorter than n_in_a_row
@@ -309,18 +312,16 @@ def note_location(position_matrix, player, i, j):
     -- position_matrix: a board_matrix sized matrix used for noting
        where n_in_a_row's could potentially be produced next turn, and who they
        could be produced by
-
     -- player: the player who can potentially create an n_in_a_row
     -- i: row at which n_in_a_row could be produced
     -- j: column at which n_in_a_row could be produced
 
-    Returns: N/A. The work done is just a state change to
-    position_matrix'''
+    Returns: N/A. The work done is just a state change to position_matrix'''
 
     assert player == Player(player).value,\
         "Unrecognized player given to position_matrix"
     assert player != Player.nobody.value, \
-        "Noting that nobody is making a potential n_in_a_row is useless"
+        "Noting that 'nobody' is making a potential n_in_a_row is useless"
 
     current = position_matrix[i][j]
     currently_nobody_at_this_position = (current == Player.nobody.value)
@@ -353,7 +354,7 @@ def check_list(board_slice, n_in_a_row, expected_blank_spaces):
 
     Returns tuple of:
         (player who has the n_in_a_row, almost_n_in_a_row, etc.,
-         (i, j) of last empty space)
+         [(i, j)'s] of last empty space)
         or
         (None, None)
         if no player meets the criteria specified for this values list'''
@@ -520,10 +521,13 @@ class Node:
         self.board_matrix = board_matrix
 
     def add_child(self, child):
+        '''Add a child node to this node'''
         self.children.append(child)
         child.parent = self
 
     def has_child(self, board_matrix):
+        '''Check if this node already has a child with the given board
+        matrix'''
         for child in self.children:
             if child.board_matrix == board_matrix:
                 return child
@@ -629,7 +633,7 @@ def build_decision_tree(computer_goes_first=True, board_dimensions=3,
     generic tic tac toe size
 
     -- depth: How deep a decision tree to build. Pass None for a full
-    tree.
+    tree (Which could take a while).
 
     Returns: root node of tree'''
     board_matrix = build_new_board_matrix(board_dimensions)

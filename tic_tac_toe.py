@@ -240,7 +240,7 @@ def get_diagonal_slices(board_matrix, n_in_a_row):
         num_diagonals_per_direction=times_to_move_over_board:\
         min(length-1, num_diagonals_per_direction-n-1)
     i_end = length-n_in_a_row
-    j_end = length-n_in_a_row
+    j_end = 0
     delta_i = 1
     delta_j = -1
     down_left_board_pieces = get_board_pieces(board_matrix, n_in_a_row,
@@ -260,7 +260,8 @@ def get_row_slices(board_matrix, n_in_a_row):
     piece_length = n_in_a_row
     i_start_func = lambda n: n
     j_start_func = lambda n: 0
-    i_end = j_end = n_in_a_row-1
+    i_end = n_in_a_row-1
+    j_end = n_in_a_row-1
     delta_i = 0
     delta_j = 1
     num_locations_to_get_pieces_from = len(board_matrix)
@@ -279,7 +280,8 @@ def get_column_slices(board_matrix, n_in_a_row):
     piece_length = n_in_a_row
     i_start_func = lambda n: 0
     j_start_func = lambda n: n
-    i_end = j_end = n_in_a_row-1
+    i_end = n_in_a_row-1
+    j_end = n_in_a_row-1
     delta_i = 1
     delta_j = 0
     num_locations_to_get_pieces_from = len(board_matrix)

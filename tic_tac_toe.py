@@ -502,7 +502,7 @@ def gen_play_permutations(board_matrix, players_turn):
     raise StopIteration
 
 
-class Node:
+class Node(object):
     '''A node in our list-tree. The node stores information on what its parent
     is, what its children are, whether it's a winner, and how many winning
     children it has (0 initially, since it starts with no children)'''

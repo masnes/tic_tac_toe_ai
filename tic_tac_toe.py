@@ -390,6 +390,31 @@ def check_list(board_slice, n_in_a_row, expected_blank_spaces):
     return None, unplayed_locations
 
 
+def check_slices_for_almost_n_in_a_rows(position_matrix, board_slices,
+                                        n_in_a_row):
+    '''Read through a list of board slices. For each board slice, check
+    to see if that board_slice meets the criteria of an almost_n_in_a_row
+    (situation where a player can win by playing at a particular location
+    on their next turn). For each board slice where this is the case,
+    mark the player who can win at the potential location of play on the
+    given position matrix.
+
+    -- position_matrix: blank nxn board used to record where players can
+       potentially win on their next turn
+    -- n_in_a_row: How many X's or O's in a row constitutes a win
+    -- board_slices: List of board slices, where each slice takes the form:
+       [(player, i, j),..]
+
+    Returns: N/A. This function just changes the state of position_matrix'''
+    expected_blank_spaces = 1
+    for board_slice in board_slices:
+        player, unplayed_locations = check_list(board_slice, n_in_a_row,
+                                                expected_blank_spaces)
+        if player is not None and len(unplayed_locations) == 1:
+            (i, j) = (unplayed_locations[0][1], unplayed_locations[0][2])
+            note_location(position_matrix, player, i, j)
+
+
 def count_value(board_matrix, value):
     '''Counts number of value in an nxn matrix
 

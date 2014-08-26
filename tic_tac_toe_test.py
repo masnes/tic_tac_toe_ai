@@ -240,6 +240,85 @@ known_values = (([[0, 0, 0], [0, 0, 0], [0, 0, 0]], 0, 0, 0, 0),
                 ([[2, 2, 2], [2, 2, 2], [2, 2, 2]], 2, 2, 2, 2))
 
 
+class TestGetPartOfBoard(unittest.TestCase):
+
+    def setUp(self):
+        self.board2x2 = [[1, 2], [3, 4], [5, 6]]
+        self.board3x3 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+        self.starting_i = 0  #default for i
+        self.starting_j = 0  #default for j
+        self.starting_is = (0, 1, 2)
+        self.starting_js = (0, 1, 2)
+        self.delta_is = (-2, -1, 0, 1, 2)
+        self.delta_js = (-2, -1, 0, 1, 2)
+        self.max_lengths = (0, 1, 2, 3)
+
+    def test_get_column(self):
+        self.expected_columns = [[(1, 0, 0), (4, 1, 0), (7, 2, 0)],
+                                 [(2, 0, 1), (5, 1, 1), (8, 2, 1)],
+                                 [(3, 0, 2), (6, 1, 2), (9, 2, 2)]]
+        self.starting_j = 0
+        self.delta_i = 1
+        self.delta_j = 0
+        self.max_length = 3
+        for n, self.starting_j in enumerate(self.starting_js):
+            board_part = tic_tac_toe.get_part_of_board(self.board3x3,
+                                                       self.starting_i,
+                                                       self.starting_j,
+                                                       self.delta_i,
+                                                       self.delta_j,
+                                                       self.max_length)
+            self.assertEqual(board_part, self.expected_columns[n])
+
+    def test_get_row(self):
+        self.expected_rows = [[(1, 0, 0), (2, 0, 1), (3, 0, 2)],
+                              [(4, 1, 0), (5, 1, 1), (6, 1, 2)],
+                              [(7, 2, 0), (8, 2, 1), (9, 2, 2)]]
+        self.starting_j = 0
+        self.delta_i = 0
+        self.delta_j = 1
+        self.max_length = 3
+        for n, self.starting_i in enumerate(self.starting_is):
+            board_part = tic_tac_toe.get_part_of_board(self.board3x3,
+                                                       self.starting_i,
+                                                       self.starting_j,
+                                                       self.delta_i,
+                                                       self.delta_j,
+                                                       self.max_length)
+            self.assertEqual(board_part, self.expected_rows[n])
+
+    def test_get_diagonal(self):
+        self.expected_down_right_diagonal = [(1, 0, 0), (5, 1, 1), (9, 2, 2)]
+        self.expected_down_left_diagonal = [(3, 0, 2), (5, 1, 1), (7, 2, 0)]
+
+        # test down right diagonal
+        self.starting_i = 0
+        self.starting_j = 0
+        self.delta_i = 1
+        self.delta_j = 1
+        self.max_length = 3
+        board_part = tic_tac_toe.get_part_of_board(self.board3x3,
+                                                   self.starting_i,
+                                                   self.starting_j,
+                                                   self.delta_i,
+                                                   self.delta_j,
+                                                   self.max_length)
+        self.assertEqual(board_part, self.expected_down_right_diagonal)
+
+        # test down left diagonal
+        self.starting_i = 0
+        self.starting_j = 2
+        self.delta_i = 1
+        self.delta_j = -1
+        self.max_length = 3
+        board_part = tic_tac_toe.get_part_of_board(self.board3x3,
+                                                   self.starting_i,
+                                                   self.starting_j,
+                                                   self.delta_i,
+                                                   self.delta_j,
+                                                   self.max_length)
+        self.assertEqual(board_part, self.expected_down_left_diagonal)
+
 def debug_check_board_full_n_in_a_row():
     for info in known_values:
         boardval = tic_tac_toe.check_board_full_n_in_a_row(info[0])

@@ -329,14 +329,11 @@ def note_location(position_matrix, player, i, j):
 
     current = position_matrix[i][j]
     currently_nobody_at_this_position = (current == Player.nobody.value)
-    currently_player1_at_this_position = (current == Player.player1.value)
-    currently_player2_at_this_position = (current == Player.player2.value)
     a_new_player_at_this_position = (current != player)
 
     if currently_nobody_at_this_position:
         position_matrix[i][j] = player
-    elif (currently_player1_at_this_position or
-          currently_player2_at_this_position):
+    else:  # somebody is at the position
         if a_new_player_at_this_position:
             position_matrix[i][j] = Player.both.value
     return

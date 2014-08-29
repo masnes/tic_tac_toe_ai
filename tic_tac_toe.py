@@ -258,10 +258,10 @@ def get_diagonal_slices(board_matrix, n_in_a_row):
     # define parameters for down right diagonals
     # first ceiling(half) diagonals start at a[?][0]
     i_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
-        max(n-length-num_ignored+1, 0)
+        max(n-length-num_ignored+1, 0)  # TODO: Logic is wrong, need to fix
     # second floor(half) diagonals start at a[0][?]
     j_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
-        max(length-n+num_ignored-1, 0)
+        max(length-n+num_ignored-1, 0)  # TODO: Logic is wrong, need to fix
     i_end = length-n_in_a_row
     j_end = length-n_in_a_row
     delta_i = 1

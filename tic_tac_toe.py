@@ -14,297 +14,54 @@ class Player(Enum):
     player2 = 2
     both = 3
 
+class BoardSlices(object):
+    def __init__(self, board_matrix, n_in_a_row):
+        self.board_matrix = board_matrix
+        self.n_in_a_row = n_in_a_row
 
-def get_part_of_board(board_matrix, starting_i, starting_j, delta_i, delta_j,
-                      max_length):
-    '''given a board_matrix, a position on that board matrix, a
-    direction/velocity to travel from that position, and a number of values to
-    try for: make a list of up to that size, by moving in that direction over
-    the board, recording found values. List is in format [(val, i, j),..]
+    def get_all_board_slices(self):
+        '''Get all n_in_a_row length slices of the rows, columns, and diagonals in
+        a board_matrix. A slice is a list containing tuples in the form
+        [(val_at_position, i, j),..].
 
-    -- board_matrix: an nxn matrix carrying the current board state
-    -- starting_i: starting row position on the board
-    -- starting_j: starting column position on the board
-    -- delta_i: rate and direction that we move over rows in the board
-    -- delta_j: rate and direction that we move over columns in the board
-    -- max_length: max length of the list that we make
+        -- board_matrix: an nxn matrix representing the tic tac toe board
+        -- n_in_a_row: How many X's or O's there are in a row'''
+        row_slices = self.get_row_slices()
+        column_slices = self.get_column_slices()
+        diagonal_slices = self.get_diagonal_slices()
+        return row_slices + column_slices + diagonal_slices
 
-    Returns: a list of values found while moving over the board'''
+    def get_part_of_board(self, starting_i, starting_j, delta_i,
+                          delta_j, max_length):
+        '''given a board_matrix, a position on that board matrix, a
+        direction/velocity to travel from that position, and a number of values to
+        try for: make a list of up to that size, by moving in that direction over
+        the board, recording found values. List is in format [(val, i, j),..]
 
-    board_part = []
-    # get parameters needed to move over matrix and record values
-    possible_i_movement = abs((max_length-1) * delta_i)
-    possible_j_movement = abs((max_length-1) * delta_j)
-    i_max = min(len(board_matrix)-1, starting_i+possible_i_movement)
-    j_max = min(len(board_matrix)-1, starting_j+possible_j_movement)
-    i_min = max(0, starting_i-possible_i_movement)
-    j_min = max(0, starting_j-possible_j_movement)
+        -- starting_i: starting row position on the board
+        -- starting_j: starting column position on the board
+        -- delta_i: rate and direction that we move over rows in the board
+        -- delta_j: rate and direction that we move over columns in the board
+        -- max_length: max length of the list that we make
 
-    # move over the matrix, recording the values found
-    i = starting_i
-    j = starting_j
-    while i_min <= i <= i_max and j_min <= j <= j_max:
-        board_part.append((board_matrix[i][j], i, j))
-        i += delta_i
-        j += delta_j
-    return board_part
+        Returns: a list of values found while moving over the board'''
 
+        board_part = []
+        # get parameters needed to move over matrix and record values
+        possible_i_movement = abs((max_length-1) * delta_i)
+        possible_j_movement = abs((max_length-1) * delta_j)
+        i_max = min(len(self.board_matrix)-1, starting_i+possible_i_movement)
+        j_max = min(len(self.board_matrix)-1, starting_j+possible_j_movement)
+        i_min = max(0, starting_i-possible_i_movement)
+        j_min = max(0, starting_j-possible_j_movement)
 
-def in_between(barrier_a, val, barrier_b):
-    '''Check if a value is between to other barrier values. Works
-    regardless of which barrier value is greater
-
-    -- barrier_a: One value that val must be in between
-    -- val: The value that we're checking
-    -- barrier_b: The other value that val must be in between
-
-    Returns: True or False'''
-    return (barrier_a <= val <= barrier_b) or (barrier_b <= val <= barrier_a)
-
-
-def get_board_pieces(board_matrix, piece_length, i_start_func, j_start_func,
-                     i_end, j_end, delta_i, delta_j,
-                     num_locations_to_get_pieces_from):
-    '''Given some initial parameters, break the board down into pieces'''
-
-    assert delta_i != 0 or delta_j != 0, \
-        "trying to move over board but staying in place! " \
-        "Please provide a non zero delta_i, and/or delta_j"
-    assert 0 <= i_end < len(board_matrix), "Must end somewhere on the board"
-    assert 0 <= j_end < len(board_matrix), "Must end somewhere on the board"
-
-    list_of_board_pieces = []
-    # Look at each starting location
-    for n in range(num_locations_to_get_pieces_from):
-        i_start = i_start_func(n)
-        j_start = j_start_func(n)
-        i = i_start
-        j = j_start
-        # get all piece_length sized board_pieces from given starting location
-        while in_between(i_start, i, i_end) and in_between(j_start, j, j_end):
-            board_piece = get_part_of_board(board_matrix, i, j, delta_i,
-                                            delta_j, piece_length)
-            if len(board_piece) == piece_length:
-                list_of_board_pieces.append(board_piece)
+        # move over the matrix, recording the values found
+        i = starting_i
+        j = starting_j
+        while i_min <= i <= i_max and j_min <= j <= j_max:
+            board_part.append((self.board_matrix[i][j], i, j))
             i += delta_i
             j += delta_j
-    return list_of_board_pieces
-
-
-def get_row_slices(board_matrix, n_in_a_row):
-    '''Get all n_in_a_row length slices of the rows in a board_matrix. A slice
-    is a list containing tuples in the form [(val_at_position, i, j),..].
-
-    -- board_matrix: an nxn matrix representing the tic tac toe board
-    -- n_in_a_row: How many X's or O's there are in a row'''
-    # Note: I considered doing this with list slicing (row lists are easy to
-    # get after all). However, I found that this quickly became confusing once
-    # I began trying to also note the i and j location down (It required 3
-    # nested loops, and remembering which is i and which is j). I think this
-    # way is simpler
-
-    piece_length = n_in_a_row
-    # Start from beginning of each row
-    i_start_func = lambda n: n
-    j_start_func = lambda n: 0
-    # move over the row
-    delta_i = 0
-    delta_j = 1
-    # End at edge of board (will get stopped by piece_length first most likely)
-    i_end = n_in_a_row-1
-    j_end = n_in_a_row-1
-    num_locations_to_get_pieces_from = len(board_matrix)
-    row_slices = get_board_pieces(board_matrix, piece_length, i_start_func,
-                                  j_start_func, i_end, j_end, delta_i, delta_j,
-                                  num_locations_to_get_pieces_from)
-    return row_slices
-
-
-def get_column_slices(board_matrix, n_in_a_row):
-    '''Get all n_in_a_row length slices of the columns in a board_matrix. A
-    slice is a list containing tuples in the form [(val_at_position, i, j),..].
-
-    -- board_matrix: an nxn matrix representing the tic tac toe board
-    -- n_in_a_row: How many X's or O's there are in a row'''
-    # Note: I considered doing this with list slicing (column lists are easy to
-    # get after all). However, I found that this quickly became confusing once
-    # I began trying to also note the i and j location down (It required 3
-    # nested loops, and remembering which is i and which is j). I think this
-    # way is simpler
-
-    piece_length = n_in_a_row
-    # Start from beginning of each column
-    i_start_func = lambda n: 0
-    j_start_func = lambda n: n
-    # Move over the column
-    delta_i = 1
-    delta_j = 0
-    # End at edge of board (will get stopped by piece_length first most likely)
-    i_end = n_in_a_row-1
-    j_end = n_in_a_row-1
-    num_locations_to_get_pieces_from = len(board_matrix)
-    column_slices = get_board_pieces(board_matrix, piece_length, i_start_func,
-                                     j_start_func, i_end, j_end, delta_i,
-                                     delta_j, num_locations_to_get_pieces_from)
-    return column_slices
-
-
-def get_diagonal_slices(board_matrix, n_in_a_row):
-    '''Look at a board matrix, return all n_in_a_row sized diagonal board
-    slices. A board slice is a list of [(board_val, i, j),..] of
-    n_in_a_row length.
-
-
-    -- board_matrix: an nxn matrix carrying the current board state
-    -- n_in_a_row: The length of an n_in_a_row
-
-    Returns: List of all diagonal board slices'''
-    # Warning: This is the most complex function in this program!
-    #
-    # a diagram of a tic tac toe board is most helpful for understanding the
-    # diagonal traversing part of this function (by far the most complex part).
-    # The following applies for any board size, but is best illustrated by a
-    # 3x3 board:
-    #
-    #    0  1  2 (j)
-    #  0__|__|__
-    #  1__|__|__
-    #  2  |  |
-    # (i)
-    #
-    # Note that we have 5 diagonals going each direction (count them. Only
-    # found 3? That's because we count diagonals of length 1 too. See diagrams
-    # below if this is confusing). For a board size of lxl (with l representing
-    # length), there's (l*2)-1 diagonals.
-    #
-    # For the down-left diagonals (We'll get to the other direction later):
-    #
-    # We can think of the first 3 (l) diagonals as starting at locations
-    # a[0][?]
-    #
-    # let #'s (numbers, eg. 1, 2, 3) represent diagonals
-    # let s# stand for the start of diagonal #
-    #
-    # direction
-    # v       starting column is not determinate
-    #  \       v  v  v
-    #   \     s3|s2|s1 <- starting row is determinate
-    #    \    __|_3|_2
-    #     v     |  | 3
-    #
-    # and the rest starting at a[0][?]
-    #
-    #   starting column is determinate
-    #   v
-    #  __|__|__
-    #  s4|__|__ < starting row
-    #  s5| 4|   < is not
-    #
-    # given a starting row, and column position starting_i, starting_j,
-    # we can get the rest of the diagonal by incrementing i, j from
-    # starting_i, starting_j to the end of the board
-    #
-    # the diagonals moving the other direction are similar, but not exactly the
-    # same. We need to rotate the above diagram, and then move in the other
-    # direction:
-    #
-    #    0  1  3 (j)      v
-    #  0 s5|s4|s3        /
-    #    --+--+--       /  new
-    #  1  4| 3|s2      /   direction
-    #    --+--+--     /
-    #  2  3| 2|s1    v
-    # (i)
-    #
-    # The final thing to note is that we only look at chunks of the diagonal
-    # that are n_in_a_row sized. Bigger chunks are broken up into
-    # n_in_a_row sized chunks, and smaller chunks are ignored.
-    #
-    # Ex. For n_in_a_row = 2 on a 4x4 board. We'd break up the center
-    # down right diagonal as follows (into lists represented as a, b, and c):
-    #
-    #    0  1  2  3 (j)
-    #  0 a |  |  |
-    #    --+--+--+--
-    #  1   |ab|  |
-    #    --+--+--+--
-    #  2   |  |bc|
-    #    --+--+--+--
-    #  3   |  |  |c
-    # (i)
-    #
-    # For n_in_a_row = 3 on a 4x4 board, we'd break up the down right diagonals
-    # for whole board as follows,
-    #    0  1  2  3 (j)
-    #  0 b |a |  |
-    #    --+--+--+--
-    #  1 d |bc|a |
-    #    --+--+--+--
-    #  2   |d |bc|a
-    #    --+--+--+--
-    #  3   |  |d |c
-    # (i)
-    #
-    # So we are ignoring some of the rows! Specifically, we're ignoring
-    # (n_in_a_row-1)*2 of them.
-
-    length = len(board_matrix)
-    num_diagonals_a_direction = (length*2)-1  # our (l*2)-1 diagonals
-    # but we don't want diagonals that are shorter than n_in_a_row
-    num_diagonals_ignored = (n_in_a_row-1)*2
-    num_diagonals_to_look_at = num_diagonals_a_direction-num_diagonals_ignored
-    times_to_move_over_board = num_diagonals_to_look_at
-
-    # define parameters for down right diagonals
-    # first ceiling(half) diagonals start at a[?][0]
-    i_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
-        max(n-length-num_ignored+1, 0)  # TODO: Logic is wrong, need to fix
-    # second floor(half) diagonals start at a[0][?]
-    j_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
-        max(length-n+num_ignored-1, 0)  # TODO: Logic is wrong, need to fix
-    i_end = length-n_in_a_row
-    j_end = length-n_in_a_row
-    delta_i = 1
-    delta_j = 1
-    # record for down right diagonals
-    down_right_board_pieces = get_board_pieces(board_matrix, n_in_a_row,
-                                               i_start_func, j_start_func,
-                                               i_end, j_end, delta_i, delta_j,
-                                               times_to_move_over_board)
-
-    # define parameters for up right diagonals
-    # first ceiling(half) diagonals start at a[?][length-1]
-    i_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
-        max(length-n+num_ignored-1, 0)
-    # second floor(half) diagonals start at a[0][?]
-    j_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored,\
-        num_diagonals_per_direction=times_to_move_over_board:\
-        min(length-1, num_diagonals_per_direction-n-1)
-    i_end = length-n_in_a_row
-    j_end = 0
-    delta_i = 1
-    delta_j = -1
-    down_left_board_pieces = get_board_pieces(board_matrix, n_in_a_row,
-                                              i_start_func, j_start_func,
-                                              i_end, j_end, delta_i, delta_j,
-                                              times_to_move_over_board)
-
-    return down_right_board_pieces+down_left_board_pieces
-
-
-def get_all_board_slices(board_matrix, n_in_a_row):
-    '''Get all n_in_a_row length slices of the rows, columns, and diagonals in
-    a board_matrix. A slice is a list containing tuples in the form
-    [(val_at_position, i, j),..].
-
-    -- board_matrix: an nxn matrix representing the tic tac toe board
-    -- n_in_a_row: How many X's or O's there are in a row'''
-    row_slices = get_row_slices(board_matrix, n_in_a_row)
-    column_slices = get_column_slices(board_matrix, n_in_a_row)
-    diagonal_slices = get_diagonal_slices(board_matrix, n_in_a_row)
-    return row_slices + column_slices + diagonal_slices
-
-
 def note_location(position_matrix, player, i, j):
     '''Call this function if a potential n_in_a_row is found (n-1 squares lined
     up horizontally, vertically, or diagonally, with the final square empty).
@@ -338,6 +95,248 @@ def note_location(position_matrix, player, i, j):
         if a_new_player_at_this_position:
             position_matrix[i][j] = Player.both.value
     return
+            return board_part
+
+
+    def _in_between(self, barrier_a, val, barrier_b):
+        '''Check if a value is between to other barrier values. Works
+        regardless of which barrier value is greater
+
+        -- barrier_a: One value that val must be in between
+        -- val: The value that we're checking
+        -- barrier_b: The other value that val must be in between
+
+        Returns: True or False'''
+        return (barrier_a <= val <= barrier_b) or (barrier_b <= val <= barrier_a)
+
+
+    def get_board_pieces(self, piece_length, i_start_func, j_start_func,
+                        i_end, j_end, delta_i, delta_j,
+                        num_locations_to_get_pieces_from):
+        '''Given some initial parameters, break the board down into pieces'''
+
+        assert delta_i != 0 or delta_j != 0, \
+            "trying to move over board but staying in place! " \
+            "Please provide a non zero delta_i, and/or delta_j"
+        assert 0 <= i_end < len(self.board_matrix), "Must end somewhere on the board"
+        assert 0 <= j_end < len(self.board_matrix), "Must end somewhere on the board"
+
+        list_of_board_pieces = []
+        # Look at each starting location
+        for n in range(num_locations_to_get_pieces_from):
+            i_start = i_start_func(n)
+            j_start = j_start_func(n)
+            i = i_start
+            j = j_start
+            # get all piece_length sized board_pieces from given starting location
+            while self._in_between(i_start, i, i_end) and self._in_between(j_start, j, j_end):
+                board_piece = self.get_part_of_board(i, j, delta_i, delta_j,
+                                                     piece_length)
+                if len(board_piece) == piece_length:
+                    list_of_board_pieces.append(board_piece)
+                    i += delta_i
+                    j += delta_j
+                    return list_of_board_pieces
+
+
+    def get_row_slices(self):
+        '''Get all n_in_a_row length slices of the rows in a board_matrix. A slice
+        is a list containing tuples in the form [(val_at_position, i, j),..].
+        '''
+        # Note: I considered doing this with list slicing (row lists are easy to
+        # get after all). However, I found that this quickly became confusing once
+        # I began trying to also note the i and j location down (It required 3
+        # nested loops, and remembering which is i and which is j). I think this
+        # way is simpler
+
+        piece_length = self.n_in_a_row
+        # Start from beginning of each row
+        i_start_func = lambda n: n
+        j_start_func = lambda n: 0
+        # move over the row
+        delta_i = 0
+        delta_j = 1
+        # End at edge of board (will get stopped by piece_length first most likely)
+        i_end = self.n_in_a_row-1
+        j_end = self.n_in_a_row-1
+        num_locations_to_get_pieces_from = len(self.board_matrix)
+        row_slices = self.get_board_pieces(piece_length, i_start_func,
+                                           j_start_func, i_end, j_end, delta_i,
+                                           delta_j, len(self.board_matrix))
+        return row_slices
+
+
+    def get_column_slices(self):
+        '''Get all n_in_a_row length slices of the columns in a board_matrix. A
+        slice is a list containing tuples in the form [(val_at_position, i, j),..].
+        '''
+        # Note: I considered doing this with list slicing (column lists are easy to
+        # get after all). However, I found that this quickly became confusing once
+        # I began trying to also note the i and j location down (It required 3
+        # nested loops, and remembering which is i and which is j). I think this
+        # way is simpler
+
+        piece_length = self.n_in_a_row
+        # Start from beginning of each column
+        i_start_func = lambda n: 0
+        j_start_func = lambda n: n
+        # Move over the column
+        delta_i = 1
+        delta_j = 0
+        # End at edge of board (will get stopped by piece_length first most likely)
+        i_end = self.n_in_a_row-1
+        j_end = self.n_in_a_row-1
+        column_slices = self.get_board_pieces(piece_length, i_start_func,
+                                              j_start_func, i_end, j_end,
+                                              delta_i, delta_j,
+                                              len(self.board_matrix))
+        return column_slices
+
+
+    def get_diagonal_slices(self):
+        '''Look at a board matrix, return all n_in_a_row sized diagonal board
+        slices. A board slice is a list of [(board_val, i, j),..] of
+        n_in_a_row length.
+
+
+        -- board_matrix: an nxn matrix carrying the current board state
+        -- n_in_a_row: The length of an n_in_a_row
+
+        Returns: List of all diagonal board slices'''
+        # Warning: This is the most complex function in this program!
+        #
+        # a diagram of a tic tac toe board is most helpful for understanding the
+        # diagonal traversing part of this function (by far the most complex part).
+        # The following applies for any board size, but is best illustrated by a
+        # 3x3 board:
+        #
+        #    0  1  2 (j)
+        #  0__|__|__
+        #  1__|__|__
+        #  2  |  |
+        # (i)
+        #
+        # Note that we have 5 diagonals going each direction (count them. Only
+        # found 3? That's because we count diagonals of length 1 too. See diagrams
+        # below if this is confusing). For a board size of lxl (with l representing
+        # length), there's (l*2)-1 diagonals.
+        #
+        # For the down-left diagonals (We'll get to the other direction later):
+        #
+        # We can think of the first 3 (l) diagonals as starting at locations
+        # a[0][?]
+        #
+        # let #'s (numbers, eg. 1, 2, 3) represent diagonals
+        # let s# stand for the start of diagonal #
+        #
+        # direction
+        # v       starting column is not determinate
+        #  \       v  v  v
+        #   \     s3|s2|s1 <- starting row is determinate
+        #    \    __|_3|_2
+        #     v     |  | 3
+        #
+        # and the rest starting at a[0][?]
+        #
+        #   starting column is determinate
+        #   v
+        #  __|__|__
+        #  s4|__|__ < starting row
+        #  s5| 4|   < is not
+        #
+        # given a starting row, and column position starting_i, starting_j,
+        # we can get the rest of the diagonal by incrementing i, j from
+        # starting_i, starting_j to the end of the board
+        #
+        # the diagonals moving the other direction are similar, but not exactly the
+        # same. We need to rotate the above diagram, and then move in the other
+        # direction:
+        #
+        #    0  1  3 (j)      v
+        #  0 s5|s4|s3        /
+        #    --+--+--       /  new
+        #  1  4| 3|s2      /   direction
+        #    --+--+--     /
+        #  2  3| 2|s1    v
+        # (i)
+        #
+        # The final thing to note is that we only look at chunks of the diagonal
+        # that are n_in_a_row sized. Bigger chunks are broken up into
+        # n_in_a_row sized chunks, and smaller chunks are ignored.
+        #
+        # Ex. For n_in_a_row = 2 on a 4x4 board. We'd break up the center
+        # down right diagonal as follows (into lists represented as a, b, and c):
+        #
+        #    0  1  2  3 (j)
+        #  0 a |  |  |
+        #    --+--+--+--
+        #  1   |ab|  |
+        #    --+--+--+--
+        #  2   |  |bc|
+        #    --+--+--+--
+        #  3   |  |  |c
+        # (i)
+        #
+        # For n_in_a_row = 3 on a 4x4 board, we'd break up the down right diagonals
+        # for whole board as follows,
+        #    0  1  2  3 (j)
+        #  0 b |a |  |
+        #    --+--+--+--
+        #  1 d |bc|a |
+        #    --+--+--+--
+        #  2   |d |bc|a
+        #    --+--+--+--
+        #  3   |  |d |c
+        # (i)
+        #
+        # So we are ignoring some of the rows! Specifically, we're ignoring
+        # (n_in_a_row-1)*2 of them.
+
+        length = len(self.board_matrix)
+        num_diagonals_a_direction = (length*2)-1  # our (l*2)-1 diagonals
+        # but we don't want diagonals that are shorter than n_in_a_row
+        num_diagonals_ignored = (self.n_in_a_row-1)*2
+        num_diagonals_to_look_at = num_diagonals_a_direction-num_diagonals_ignored
+        times_to_move_over_board = num_diagonals_to_look_at
+
+        # define parameters for down right diagonals
+        # first ceiling(half) diagonals start at a[?][0]
+        i_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
+            max(n-length-num_ignored+1, 0)  # TODO: Logic is wrong, need to fix
+        # second floor(half) diagonals start at a[0][?]
+        j_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
+            max(length-n+num_ignored-1, 0)  # TODO: Logic is wrong, need to fix
+        i_end = length-self.n_in_a_row
+        j_end = length-self.n_in_a_row
+        delta_i = 1
+        delta_j = 1
+        # record for down right diagonals
+        down_right_board_pieces = self.get_board_pieces(self.n_in_a_row,
+                                                        i_start_func,
+                                                        j_start_func, i_end,
+                                                        j_end, delta_i, delta_j,
+                                                        times_to_move_over_board)
+
+        # define parameters for up right diagonals
+        # first ceiling(half) diagonals start at a[?][length-1]
+        i_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored:\
+            max(length-n+num_ignored-1, 0)
+        # second floor(half) diagonals start at a[0][?]
+        j_start_func = lambda n, length=length, num_ignored=num_diagonals_ignored,\
+            num_diagonals_per_direction=times_to_move_over_board:\
+            min(length-1, num_diagonals_per_direction-n-1)
+        i_end = length-self.n_in_a_row
+        j_end = 0
+        delta_i = 1
+        delta_j = -1
+        down_left_board_pieces = self.get_board_pieces(self.n_in_a_row,
+                                                       i_start_func,
+                                                       j_start_func, i_end,
+                                                       j_end, delta_i, delta_j,
+                                                       times_to_move_over_board)
+
+        return down_right_board_pieces+down_left_board_pieces
+
 
 
 # TODO: Needs a better name than check_list

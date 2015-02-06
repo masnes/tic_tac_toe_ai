@@ -62,39 +62,6 @@ class BoardSlices(object):
             board_part.append((self.board_matrix[i][j], i, j))
             i += delta_i
             j += delta_j
-def note_location(position_matrix, player, i, j):
-    '''Call this function if a potential n_in_a_row is found (n-1 squares lined
-    up horizontally, vertically, or diagonally, with the final square empty).
-    It notes the location of the n_in_a_row, and the player who can
-    make an n_in_a_row there in a provided position_matrix. If
-    another n_in_a_row has been found already in the same position, this
-    function will update the state of position_matrix to record that
-    both players can make an n_in_a_row by playing there
-
-    -- position_matrix: a board_matrix sized matrix used for noting
-       where n_in_a_row's could potentially be produced next turn, and who they
-       could be produced by
-    -- player: the player who can potentially create an n_in_a_row
-    -- i: row at which n_in_a_row could be produced
-    -- j: column at which n_in_a_row could be produced
-
-    Returns: N/A. The work done is just a state change to position_matrix'''
-
-    assert player == Player(player).value,\
-        "Unrecognized player given to position_matrix"
-    assert player != Player.nobody.value, \
-        "Noting that 'nobody' is making a potential n_in_a_row is useless"
-
-    current = position_matrix[i][j]
-    currently_nobody_at_this_position = (current == Player.nobody.value)
-    a_new_player_at_this_position = (current != player)
-
-    if currently_nobody_at_this_position:
-        position_matrix[i][j] = player
-    else:  # somebody is at the position
-        if a_new_player_at_this_position:
-            position_matrix[i][j] = Player.both.value
-    return
             return board_part
 
 
@@ -337,96 +304,136 @@ def note_location(position_matrix, player, i, j):
 
         return down_right_board_pieces+down_left_board_pieces
 
+class PotentialWins(object):
+    def __init__(self, board_size):
+        self.position_matrix = build_new_board_matrix(board_size)
+
+    def note_location(self, player, i, j):
+        '''Call this function if a potential n_in_a_row is found (n-1 squares lined
+        up horizontally, vertically, or diagonally, with the final square empty).
+        It notes the location of the n_in_a_row, and the player who can
+        make an n_in_a_row there in a provided position_matrix. If
+        another n_in_a_row has been found already in the same position, this
+        function will update the state of position_matrix to record that
+        both players can make an n_in_a_row by playing there
+
+        -- position_matrix: a board_matrix sized matrix used for noting
+        where n_in_a_row's could potentially be produced next turn, and who they
+        could be produced by
+        -- player: the player who can potentially create an n_in_a_row
+        -- i: row at which n_in_a_row could be produced
+        -- j: column at which n_in_a_row could be produced
+
+        Returns: N/A. The work done is just a state change to position_matrix'''
+
+        assert player == Player(player).value,\
+            "Unrecognized player given to position_matrix"
+        assert player != Player.nobody.value, \
+            "Noting that 'nobody' is making a potential n_in_a_row is useless"
+
+        current = self.position_matrix[i][j]
+        currently_nobody_at_this_position = (current == Player.nobody.value)
+        a_new_player_at_this_position = (current != player)
+
+        if currently_nobody_at_this_position:
+            self.position_matrix[i][j] = player
+        else:  # somebody is at the position
+            if a_new_player_at_this_position:
+                self.position_matrix[i][j] = Player.both.value
+        return
 
 
-# TODO: Needs a better name than check_list
-def check_list(board_slice, n_in_a_row, expected_blank_spaces):
-    '''Takes a list of values of size n_in_a_row. Then checks that list
-    for a scenario where all but some specified number of values represent one
-    player, and the other value(s) represents unplayed. This function can be
-    used to check for n_in_a_row's (winning situations) and almost_n_in_a_rows
-    (situations where a player is one move away from winning).
+    # TODO: Needs a better name than check_list
+    def check_list(self, board_slice, n_in_a_row, expected_blank_spaces):
+        '''Takes a list of values of size n_in_a_row. Then checks that list
+        for a scenario where all but some specified number of values represent one
+        player, and the other value(s) represents unplayed. This function can be
+        used to check for n_in_a_row's (winning situations) and almost_n_in_a_rows
+        (situations where a player is one move away from winning).
 
-    -- board_slice: A list of values representing a partial slice of a
-       board row, column, or diagonal. List should be in format:
-       [(val, i, j),..], and Must be the same length as n_in_a_row
-    -- n_in_a_row: How many consecutive values constitutes an n_in_a_row
-    -- expected_blank_spaces: How many of the n_in_a_row
+        -- board_slice: A list of values representing a partial slice of a
+        board row, column, or diagonal. List should be in format:
+        [(val, i, j),..], and Must be the same length as n_in_a_row
+        -- n_in_a_row: How many consecutive values constitutes an n_in_a_row
+        -- expected_blank_spaces: How many of the n_in_a_row
 
-    Returns tuple of:
-        (player who has the n_in_a_row, almost_n_in_a_row, etc.,
-         [(i, j)'s] of last empty space)
-        or
-        (None, None)
-        if no player meets the criteria specified for this values list'''
-    assert len(board_slice) == n_in_a_row, \
-        "values sequence not the same length as an expected n-in-a-row"
-    # counters
-    unplayed_count = 0
-    player1_count = 0
-    player2_count = 0
-    # how far from the start of the list the first unplayed square is
-    unplayed_locations = []
+        Returns tuple of:
+            (player who has the n_in_a_row, almost_n_in_a_row, etc.,
+            [(i, j)'s] of last empty space)
+            or
+            (None, None)
+            if no player meets the criteria specified for this values list'''
+        assert len(board_slice) == n_in_a_row, \
+            "values sequence not the same length as an expected n-in-a-row"
+        # counters
+        unplayed_count = 0
+        player1_count = 0
+        player2_count = 0
+        # how far from the start of the list the first unplayed square is
+        unplayed_locations = []
 
-    # count occurences
-    for location in board_slice:
-        value = location[0]
-        i = location[1]
-        j = location[2]
-        if value == Player.player1.value:
-            player1_count += 1
-        elif value == Player.player2.value:
-            player2_count += 1
-        elif value == Player.nobody.value:
-            unplayed_count += 1
-            unplayed_locations.append((i, j))
+        # count occurences
+        for location in board_slice:
+            value = location[0]
+            i = location[1]
+            j = location[2]
+            if value == Player.player1.value:
+                player1_count += 1
+            elif value == Player.player2.value:
+                player2_count += 1
+            elif value == Player.nobody.value:
+                unplayed_count += 1
+                unplayed_locations.append((i, j))
 
-    # check to see if the values_sequence meets the specified criteria
-    if unplayed_count == expected_blank_spaces:
-        if player1_count == n_in_a_row - expected_blank_spaces:
-            return Player.player1.value, unplayed_locations
-        elif player2_count == n_in_a_row - expected_blank_spaces:
-            return Player.player2.value, unplayed_locations
+        # check to see if the values_sequence meets the specified criteria
+        if unplayed_count == expected_blank_spaces:
+            if player1_count == n_in_a_row - expected_blank_spaces:
+                return Player.player1.value, unplayed_locations
+            elif player2_count == n_in_a_row - expected_blank_spaces:
+                return Player.player2.value, unplayed_locations
 
-    # if the values_sequence does not meet the specified criteria
-    return None, unplayed_locations
-
-
-def check_slices_for_almost_n_in_a_rows(position_matrix, board_slices,
-                                        n_in_a_row):
-    '''Read through a list of board slices. For each board slice, check
-    to see if that board_slice meets the criteria of an almost_n_in_a_row
-    (situation where a player can win by playing at a particular location
-    on their next turn). For each board slice where this is the case,
-    mark the player who can win at the potential location of play on the
-    given position matrix.
-
-    -- position_matrix: blank nxn board used to record where players can
-       potentially win on their next turn
-    -- n_in_a_row: How many X's or O's in a row constitutes a win
-    -- board_slices: List of board slices, where each slice takes the form:
-       [(player, i, j),..]
-
-    Returns: N/A. This function just changes the state of position_matrix'''
-    expected_blank_spaces = 1
-    for board_slice in board_slices:
-        player, unplayed_locations = check_list(board_slice, n_in_a_row,
-                                                expected_blank_spaces)
-        if player is not None and len(unplayed_locations) == 1:
-            (i, j) = (unplayed_locations[0][1], unplayed_locations[0][2])
-            note_location(position_matrix, player, i, j)
+        # if the values_sequence does not meet the specified criteria
+        return None, unplayed_locations
 
 
-def check_slices_for_a_winning_player(board_slices, n_in_a_row):
-    expected_blank_spaces = 0
-    for board_slice in board_slices:
-        player, unplayed_locations = check_list(board_slice, n_in_a_row,
-                                                expected_blank_spaces)
-        if len(unplayed_locations) == 0 and (player == Player.player1.value or
-                                             player == Player.player2.value):
-            return player
+    def check_slices_for_almost_n_in_a_rows(self, position_matrix, board_slices,
+                                            n_in_a_row):
+        '''Read through a list of board slices. For each board slice, check
+        to see if that board_slice meets the criteria of an almost_n_in_a_row
+        (situation where a player can win by playing at a particular location
+        on their next turn). For each board slice where this is the case,
+        mark the player who can win at the potential location of play on the
+        given position matrix.
 
-    return None
+        -- position_matrix: blank nxn board used to record where players can
+        potentially win on their next turn
+        -- n_in_a_row: How many X's or O's in a row constitutes a win
+        -- board_slices: List of board slices, where each slice takes the form:
+        [(player, i, j),..]
+
+        Returns: N/A. This function just changes the state of position_matrix'''
+        expected_blank_spaces = 1
+        for board_slice in board_slices:
+            player, unplayed_locations = self.check_list(board_slice,
+                                                         n_in_a_row,
+                                                         expected_blank_spaces)
+            if player is not None and len(unplayed_locations) == 1:
+                (i, j) = (unplayed_locations[0][1], unplayed_locations[0][2])
+                self.note_location(player, i, j)
+
+
+    def check_slices_for_a_winning_player(self, board_slices, n_in_a_row):
+        expected_blank_spaces = 0
+        for board_slice in board_slices:
+            player, unplayed_locations = self.check_list(board_slice,
+                                                         n_in_a_row,
+                                                         expected_blank_spaces)
+            if len(unplayed_locations) == 0 and (player == Player.player1.value
+                                                 or
+                                                 player == Player.player2.value):
+                return player
+
+        return None
 
 
 def count_value(board_matrix, value):

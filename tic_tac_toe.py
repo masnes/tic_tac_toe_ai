@@ -481,17 +481,6 @@ class WhosTurnGenerator(object):
         return self.current_player
 
 
-def copy_list_of_lists(board_matrix):
-    '''Given a list of lists (a board_matrix), produce a copy of all items
-    within that list and return the copy. Useful for avoiding python
-    pass-by-reference issues
-
-    -- board_matrix: an nxn matrix holding the current state of play'''
-    new_board_matrix = []
-    for row in board_matrix:
-        new_row = list(row)
-        new_board_matrix.append(new_row)
-    return new_board_matrix
 
 
 def gen_play_permutations(board_matrix, players_turn):
@@ -502,7 +491,7 @@ def gen_play_permutations(board_matrix, players_turn):
     for i, row in enumerate(board_matrix):
         for j, square in enumerate(row):
             if square == Player.nobody.value:
-                new_board_matrix = copy_list_of_lists(board_matrix)
+                new_board_matrix = copy_board(board_matrix)
                 new_board_matrix[i][j] = players_turn
                 yield new_board_matrix
     raise StopIteration
@@ -630,51 +619,76 @@ def build_new_board_matrix(dimensions):
         board_matrix.append(sub_list)
     return board_matrix
 
+def copy_board(board_matrix):
+    return _copy_list_of_lists(board_matrix)
 
-def build_decision_tree(computer_goes_first=True, board_dimensions=3,
-                        max_depth=None):
-    '''Builds a decision tree for a board of given dimensions
-    up to a maximum depth, or until all possibilities are exhausted
+def _copy_list_of_lists(board_matrix):
+    '''Given a list of lists (a board_matrix), produce a copy of all items
+    within that list and return the copy. Useful for avoiding python
+    pass-by-reference issues
 
-    -- board_dimensions: how big a board to calculate for, base is 3, the
-    generic tic tac toe size
-
-    -- depth: How deep a decision tree to build. Pass None for a full
-    tree (Which could take a while).
-
-    Returns: root node of tree'''
-    board_matrix = build_new_board_matrix(board_dimensions)
-
-    if computer_goes_first:
-        computer_player = Player.player1.value
-    else:
-        computer_player = Player.player2.value
-
-    root = Node(None, board_matrix, computer_player)
-    starting_player = Player.player1.value
-    add_nodes_recursively(root, starting_player, computer_player, max_depth)
-
-    return root
+    -- board_matrix: an nxn matrix holding the current state of play'''
+    new_board_matrix = []
+    for row in board_matrix:
+        new_row = list(row)
+        new_board_matrix.append(new_row)
+    return new_board_matrix
 
 
-def print_tree_structure(root):
-    '''Prints current tree structure. For debugging purposes
+class DecisionTree(object):
+    def __init__(self, computer_goes_first=True, board_dimensions=3,
+                 max_depth=None):
+        self.computer_goes_first = computer_goes_first
+        self.board_dimensions = board_dimensions
+        self.max_depth = max_depth
+        self.root = self.build_decision_tree()
 
-    root -- the root node for the tree (or whatever node is to be treated as
-    such)'''
-    fifo = queue.Queue()
-    fifo.put(root)
-    next_item = fifo.get()
-    while next_item:
-        num_children = len(next_item.children)
-        print(num_children)
-        if num_children:
-            for child in next_item.children:
-                fifo.put(child)
-        if not fifo.empty():
-            next_item = fifo.get()
+    def get_root(self):
+        return self.root
+
+    def build_decision_tree(self):
+        '''Builds a decision tree for a board of given dimensions
+        up to a maximum depth, or until all possibilities are exhausted
+
+        -- board_dimensions: how big a board to calculate for, base is 3, the
+        generic tic tac toe size
+
+        -- depth: How deep a decision tree to build. Pass None for a full
+        tree (Which could take a while).
+
+        Returns: root node of tree'''
+        board_matrix = build_new_board_matrix(self.board_dimensions)
+
+        if self.computer_goes_first:
+            computer_player = Player.player1.value
         else:
-            next_item = None
+            computer_player = Player.player2.value
+
+        root = Node(None, board_matrix, computer_player)
+        starting_player = Player.player1.value
+        add_nodes_recursively(root, starting_player, computer_player, self.max_depth)
+
+        return root
+
+
+    def print_tree_structure(self, root):
+        '''Prints current tree structure. For debugging purposes
+
+        root -- the root node for the tree (or whatever node is to be treated as
+        such)'''
+        fifo = queue.Queue()
+        fifo.put(root)
+        next_item = fifo.get()
+        while next_item:
+            num_children = len(next_item.children)
+            print(num_children)
+            if num_children:
+                for child in next_item.children:
+                    fifo.put(child)
+            if not fifo.empty():
+                next_item = fifo.get()
+            else:
+                next_item = None
 
 
 def test_queue():

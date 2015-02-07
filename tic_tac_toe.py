@@ -126,7 +126,6 @@ class BoardSlices(object):
         # End at edge of board (will get stopped by piece_length first most likely)
         i_end = self.n_in_a_row-1
         j_end = self.n_in_a_row-1
-        num_locations_to_get_pieces_from = len(self.board_matrix)
         row_slices = self.get_board_pieces(piece_length, i_start_func,
                                            j_start_func, i_end, j_end, delta_i,
                                            delta_j, len(self.board_matrix))

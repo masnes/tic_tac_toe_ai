@@ -77,9 +77,9 @@ class BoardSlices(object):
         return (barrier_a <= val <= barrier_b) or (barrier_b <= val <= barrier_a)
 
 
-    def get_board_pieces(self, piece_length, i_start_func, j_start_func,
-                        i_end, j_end, delta_i, delta_j,
-                        num_locations_to_get_pieces_from):
+    def get_board_pieces(self, piece_length, i_start_func, j_start_func, i_end,
+                         j_end, delta_i, delta_j,
+                         num_locations_to_get_pieces_from):
         '''Given some initial parameters, break the board down into pieces'''
 
         assert delta_i != 0 or delta_j != 0, \
